@@ -1,38 +1,94 @@
-.App {
-  text-align: center;
+#navbar{
+  padding-left: 20px;
+  padding-right: 20px;
+  background-color: whitesmoke;
+  justify-content: space-between;
+  min-height: 8vh;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+#button{
+  background-color: crimson;
+  border-color: crimson;
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+#button:focus {
+  box-shadow: 0 0 0 1px rgba(220, 20, 60, 0.671), 0 0 0 0.2rem rgba(220, 20, 60, 0.671) !important;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+#btn-outlined{
+  background-color: transparent;
+  border-color: crimson;
+  color: crimson
 }
+
+#btn-outlined:hover{
+  background-color: crimson;
+  color: white
+}
+
+#btn-outlined:focus{
+  box-shadow: 0 0 0 1px rgba(220, 20, 60, 0.671), 0 0 0 0.2rem rgba(220, 20, 60, 0.671) !important;
+}
+
+#logo{
+  color: crimson;
+}
+
+#container{
+  width: 75%;
+  min-height: 92vh;
+}
+
+#main{
+  min-height: 92vh;
+}
+
+#side{
+  padding-top: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+  min-height: 92vh;
+  background-color: #00000011
+}
+
+#question-card{
+  max-width: 100%;
+  min-height: 10rem;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border-left-color: crimson;
+  border-left-width: 5px;
+}
+
+#title-card{
+  border-width: 0px;
+  max-width: 90%;
+  height: fit-content;
+  margin-top: 20px;
+}
+
+#survey-card{
+  max-width: 100%;
+  height: fit-content;
+  border-top-color: crimson;
+  border-top-width: 5px;
+  margin: 20px;
+}
+
+#item-list{
+  border-width: 0px;
+}
+
+#up{
+  margin-right: 10px;
+}
+
+#title{
+  margin-bottom: 10px;
+}
+
+#question{
+  margin-bottom: 10px;
+}
+
