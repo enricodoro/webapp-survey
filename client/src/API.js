@@ -35,4 +35,9 @@ async function loadUsers(id) {
     const users = await response.json()
     return users
 }
+async function loadSurvey(id) {
+    const response = await fetch(url + "/api/surveys/" + id)
+    const survey = await response.json()
+    return survey
+}
 export default API

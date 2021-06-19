@@ -31,6 +31,18 @@ exports.loadAdminSurveys = (admin) => {
         })
     })
 }
+exports.loadSurvey = (id) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM surveys WHERE surveyId=?'
+        db.get(sql, [id], (err, row) => {
+            if(err){
+                reject(err)
+                return;
+            }
+            resolve(row)
+        })
+    })
+}
 exports.loadQuestions = (id) => {
     return new Promise((resolve, reject) => {
         const sql = 'SELECT * FROM questions WHERE surveyId=?'
