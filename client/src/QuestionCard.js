@@ -1,19 +1,19 @@
-import { Card, Form, Button, ButtonGroup, Container, Col, Row, Tooltip, OverlayTrigger } from "react-bootstrap"
+import { Card, Form, Button, ButtonGroup, Col, Row } from "react-bootstrap"
 import { useState, useEffect } from "react";
-import { FiArrowDown, FiArrowUp, FiDelete } from "react-icons/fi";
+import { FiArrowDown, FiArrowUp } from "react-icons/fi";
 import { AiOutlineDelete } from "react-icons/ai";
 import API from './API';
 
 function QuestionCardAdmin(props) {
     const clickButton = (e) => {
-        if (e.currentTarget.id === 'down' && props.question.id != props.questions.length - 1) {
+        if (e.currentTarget.id === 'down' && props.question.id !== props.questions.length - 1) {
             let newQ = [...props.questions]
             let tmp = newQ[props.question.id]
             newQ[props.question.id] = newQ[props.question.id + 1]
             newQ[props.question.id + 1] = tmp
             newQ.forEach((q, i) => q.id = i)
             props.setQuestions(newQ)
-        } else if (e.currentTarget.id === 'up' && props.question.id != 0) {
+        } else if (e.currentTarget.id === 'up' && props.question.id !== 0) {
             let newQ = [...props.questions]
             let tmp = newQ[props.question.id]
             newQ[props.question.id] = newQ[props.question.id - 1]
@@ -25,7 +25,7 @@ function QuestionCardAdmin(props) {
 
     const handleDelete = (e) => {
         let newQ = [...props.questions]
-        newQ = newQ.filter((q) => q.id != props.question.id)
+        newQ = newQ.filter((q) => q.id !== props.question.id)
         newQ.forEach((q, i) => q.id = i)
         props.setQuestions(newQ)
         console.log(newQ)
@@ -34,7 +34,7 @@ function QuestionCardAdmin(props) {
     if (props.question.open)
         return <OpenQuestion question={props.question} clickButton={clickButton} handleDelete={handleDelete} />
     else
-        if (props.question.max == 1)
+        if (props.question.max === 1)
             return <SingleChoiceQuestion question={props.question} clickButton={clickButton} handleDelete={handleDelete} />
         else
             return <MultipleChoiceQuestion question={props.question} clickButton={clickButton} handleDelete={handleDelete} />
@@ -49,8 +49,8 @@ function SingleChoiceQuestion(props) {
         <Col md={10}>
             <Card id="question-card">
                 <Card.Body>
-                    <Card.Title>
-                        {props.question.title}{props.question.min == 0 ? " *" : ""}
+                    <Card.Title className={props.question.min === 0 ? "" : "mandatory"}>
+                        {props.question.title}
                     </Card.Title>
                     <Form>
                         {props.question.answers.map((a, i) => <Form.Check
@@ -78,8 +78,8 @@ function MultipleChoiceQuestion(props) {
         <Col md={10}>
             <Card id="question-card">
                 <Card.Body>
-                    <Card.Title>
-                        {props.question.title}{props.question.min == 0 ? " *" : ""}
+                    <Card.Title className={props.question.min === 0 ? "" : "mandatory"}>
+                        {props.question.title}
                     </Card.Title>
                     <Form>
                         {props.question.answers.map((a, i) => <Form.Check
@@ -89,6 +89,7 @@ function MultipleChoiceQuestion(props) {
                             disabled
                         />)}
                     </Form>
+                    <Form.Text>A maximum of {props.question.max} answers can be chosen</Form.Text>
                 </Card.Body>
             </Card>
         </Col>
@@ -106,8 +107,8 @@ function OpenQuestion(props) {
         <Col md={10}>
             <Card id="question-card">
                 <Card.Body>
-                    <Card.Title>
-                        {props.question.title}{props.question.optional ? " *" : ""}
+                    <Card.Title className={props.question.optional ? "" : "mandatory"}>
+                        {props.question.title}
                     </Card.Title>
                     <Form.Control disabled>
 
@@ -134,13 +135,14 @@ function Delete(props) {
 }
 
 function QuestionCard(props) {
+
     if (props.question.open === 1)
-        return <SubmitOpenQuestion question={props.question} />
+        return <SubmitOpenQuestion question={props.question} admin={props.admin}/>
     else
         if (props.question.max === 1)
-            return <SubmitSingleChoiceQuestion question={props.question} />
+            return <SubmitSingleChoiceQuestion question={props.question} admin={props.admin}/>
         else
-            return <SubmitMultipleChoiceQuestion question={props.question} />
+            return <SubmitMultipleChoiceQuestion question={props.question} admin={props.admin}/>
 }
 
 function SubmitSingleChoiceQuestion(props) {
@@ -153,29 +155,36 @@ function SubmitSingleChoiceQuestion(props) {
         })
     }, [])
 
-    return <Row md={2} className="justify-content-center">
-        <Card id="question-card">
-            <Card.Body>
-                <Card.Title>
-                    {props.question.title}{props.question.min == 0 ? " *" : ""}
-                </Card.Title>
-                <Form>
-                    {answers.map((a) => <Form.Check
-                        type="radio"
-                        label={a.text}
-                        id={a.id}
-                        key={a.id}
-                        name="formRadios"
-                    />)}
-                </Form>
-            </Card.Body>
-        </Card>
-    </Row>
+    return <Card className="mx-auto" id="question-card">
+        <Card.Body>
+            <Card.Title className={props.question.min === 0 ? "" : "mandatory"}>
+                {props.question.title}
+            </Card.Title>
+            <Form>
+                {answers.map((a) => <Form.Check
+                    disabled={props.admin}
+                    type="radio"
+                    label={a.text}
+                    id={a.id}
+                    key={a.id}
+                    name="formRadios"
+                />)}
+            </Form>
+        </Card.Body>
+    </Card>
 }
 
 function SubmitMultipleChoiceQuestion(props) {
 
     const [answers, setAnswers] = useState([])
+    const [max, setMax] = useState(0)
+
+    const checkMax = (e) => {
+        if (e.checked && max < props.question.max) setMax(old => old + 1)
+        else if (!e.checked && max > 0) setMax(old => old - 1)
+        if (max === props.question.max)
+            console.log(max)
+    }
 
     useEffect(() => {
         API.loadOfferedAnswers(props.question.id).then(dbOfferedAnswers => {
@@ -183,36 +192,38 @@ function SubmitMultipleChoiceQuestion(props) {
         })
     }, [])
 
-    return <Row md={2} className="justify-content-center">
-        <Card id="question-card">
-            <Card.Body>
-                <Card.Title>
-                    {props.question.title}{props.question.min == 0 ? " *" : ""}
-                </Card.Title>
+    return <Card className="mx-auto" id="question-card">
+        <Card.Body>
+            <Card.Title className={props.question.min === 0 ? "" : "mandatory"}>
+                {props.question.title}
+            </Card.Title>
+            <Form.Group>
                 <Form>
                     {answers.map((a) => <Form.Check
+                        disabled={props.admin}
                         type="checkbox"
                         label={a.text}
                         id={a.id}
                         key={a.id}
+                        onChange={(e) => checkMax(e.target)}
                     />)}
                 </Form>
-            </Card.Body>
-        </Card>
-    </Row>
+                <Form.Text>A maximum of {props.question.max} answers can be chosen</Form.Text>
+            </Form.Group>
+        </Card.Body>
+    </Card>
 }
 
 function SubmitOpenQuestion(props) {
-    return <Row md={2} className="justify-content-center">
-        <Card id="question-card">
-            <Card.Body>
-                <Card.Title>
-                    {props.question.title}{props.question.optional ? " *" : ""}
-                </Card.Title>
-                <Form.Control placeholder="Type your answer here"></Form.Control>
-            </Card.Body>
-        </Card>
-    </Row>
+
+    return <Card className="mx-auto" id="question-card">
+        <Card.Body>
+            <Card.Title className={props.question.optional ? "" : "mandatory"}>
+                {props.question.title}
+            </Card.Title>
+            <Form.Control disabled={props.admin} maxLength="200" placeholder="Type your answer here"></Form.Control>
+        </Card.Body>
+    </Card>
 }
 
 export { QuestionCardAdmin, QuestionCard };

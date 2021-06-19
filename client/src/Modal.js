@@ -1,4 +1,4 @@
-import { Modal, Button, Form, Col, InputGroup, FormGroup } from 'react-bootstrap'
+import { Modal, Button, Form, Col, InputGroup } from 'react-bootstrap'
 import { useState } from 'react'
 import { AiOutlineDelete } from "react-icons/ai";
 
@@ -53,7 +53,7 @@ function OpenedQuestionModal(props) {
         <Form noValidate validated={validated}>
             <Modal.Header closeButton onClick={() => props.setShow([false, false])}>
                 <Modal.Title id="contained-modal-title-vcenter">
-                    New opened question
+                    New open-ended question
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -110,7 +110,7 @@ function ClosedQuestionModal(props) {
 
     const handleDelete = (e, ansId) => {
         let newA = [...answers]
-        setAnswers(newA.filter((a,i) => i != ansId))
+        setAnswers(newA.filter((a,i) => i !== ansId))
     }
 
     const handleClose = () => {
@@ -158,7 +158,7 @@ function ClosedQuestionModal(props) {
         <Form noValidate validated={validated}>
             <Modal.Header closeButton onClick={() => props.setShow([false, false])}>
                 <Modal.Title id="contained-modal-title-vcenter">
-                    New closed question
+                    New close-ended question
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
