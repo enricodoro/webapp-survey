@@ -67,4 +67,16 @@ exports.loadAnswers = (id) => {
         })
     })
 }
+
+exports.loadUsers = (id) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT DISTINCT id, username FROM given_answers, users WHERE given_answers.surveyId=? AND given_answers.idUser=users.id ORDER BY users.id'
+        db.all(sql, [id], (err, rows) => {
+            if(err){
+                reject(err)
+                return;
+            }
+            resolve(rows)
+        })
+    })
 }

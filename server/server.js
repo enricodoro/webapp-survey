@@ -79,6 +79,18 @@ app.get('/api/answers/:id', async (req, res) => {
     res.status(500).json(error)
   }
 })
+
+// get users that submit for a given survey
+
+app.get('/api/users/:id', async (req, res) => {
+  const id = req.params.id;
+  try {
+    let users = await dao.loadUsers(id)
+    res.json(users)
+  } catch (error) {
+    res.status(500).json(error)
+  }
+})
 // activate the server
 app.listen(PORT, () => {
   console.log(`Server listening at http://localhost:${PORT}`);

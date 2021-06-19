@@ -30,4 +30,9 @@ async function loadAnswers(id) {
     const answers = await response.json()
     return answers
 }
+async function loadUsers(id) {
+    const response = await fetch(url + "/api/users/" + id)
+    const users = await response.json()
+    return users
+}
 export default API
