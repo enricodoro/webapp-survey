@@ -1,10 +1,48 @@
 'use strict'
-
+const bcrypt = require('bcrypt')
 const sqlite = require('sqlite3')
 
 const db = new sqlite.Database('survey.db', (err) => {
     if (err) throw err
 })
+
+
+exports.getAdmin = (username, password) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM admins WHERE username=?'
+        db.get(sql, [username], (err, row) => {
+            if (err)
+                reject(err); //db error
+            else if (row === undefined)
+                resolve(false); //user not found
+            else {
+                bcrypt.compare(password, row.hash).then(result => {  //compare hash computed with the one stored
+                    if (result)  // password hash matches
+                        resolve({ id: row.id, username: row.username })
+                    else
+                        resolve(false)
+                })
+            }
+        });
+    });
+}
+
+exports.getAdminById = (id) => {
+    return new Promise((resolve, reject) => {
+      const sql = 'SELECT * FROM admins WHERE id = ?';
+        db.get(sql, [id], (err, row) => {
+          if (err) 
+            reject(err);
+          else if (row === undefined)
+            resolve({error: 'Admin not found.'});
+          else {
+            // by default, the local strategy looks for "username": not to create confusion in server.js, we can create an object with that property
+            const user = {id: row.id, username: row.username }
+            resolve(user);
+          }
+      });
+    });
+  };
 
 exports.loadSurveys = () => {
     return new Promise((resolve, reject) => {
@@ -31,6 +69,7 @@ exports.loadAdminSurveys = (admin) => {
         })
     })
 }
+
 exports.loadSurvey = (id) => {
     return new Promise((resolve, reject) => {
         const sql = 'SELECT * FROM surveys WHERE surveyId=?'
@@ -43,6 +82,7 @@ exports.loadSurvey = (id) => {
         })
     })
 }
+
 exports.loadQuestions = (id) => {
     return new Promise((resolve, reject) => {
         const sql = 'SELECT * FROM questions WHERE surveyId=?'
@@ -67,6 +107,8 @@ exports.loadOfferedAnswers = (id) => {
             resolve(rows)
         })
     })
+}
+
 exports.loadAnswers = (id) => {
     return new Promise((resolve, reject) => {
         const sql = 'SELECT * FROM given_answers WHERE surveyId=? ORDER BY idUser'

@@ -24,20 +24,58 @@ async function loadOfferedAnswers(id) {
     return offeredAnswers
 }
 
-const API = { loadSurveys, loadQuestions, loadOfferedAnswers }
 async function loadAnswers(id) {
     const response = await fetch(url + "/api/answers/" + id)
     const answers = await response.json()
     return answers
 }
+
 async function loadUsers(id) {
     const response = await fetch(url + "/api/users/" + id)
     const users = await response.json()
     return users
 }
+
 async function loadSurvey(id) {
     const response = await fetch(url + "/api/surveys/" + id)
     const survey = await response.json()
     return survey
 }
+
+
+async function logIn(credentials) {
+    let response = await fetch(url + '/api/sessions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(credentials),
+        }
+    );
+    if (response.ok) {
+        const user = await response.json();
+        return user.id;
+    }
+    else {
+        try {
+            const errDetail = await response.json();
+            throw errDetail.message;
+        }
+        catch (err) {
+            throw err;
+        }
+    }
+}
+
+async function logOut() {
+    await fetch(url+'/api/sessions/current', { method: 'DELETE' });
+}
+
+async function getAdmin(){
+    let response = await fetch(url+'/api/getCurrentUser');
+    if (response.ok) {
+        const userId = await response.json();
+        return userId;
+    }
+}
+
+const API = { loadSurveys, loadAdminSurveys, loadQuestions, loadAnswers, loadUsers, loadOfferedAnswers, loadSurvey, logIn, logOut, getAdmin }
 export default API
