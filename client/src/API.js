@@ -25,4 +25,9 @@ async function loadOfferedAnswers(id) {
 }
 
 const API = { loadSurveys, loadQuestions, loadOfferedAnswers }
+async function loadAnswers(id) {
+    const response = await fetch(url + "/api/answers/" + id)
+    const answers = await response.json()
+    return answers
+}
 export default API

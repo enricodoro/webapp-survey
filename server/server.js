@@ -68,6 +68,17 @@ app.get('/api/offered-answers/:id', async (req, res) => {
   }
 })
 
+// get given answers for single survey
+
+app.get('/api/answers/:id', async (req, res) => {
+  const id = req.params.id;
+  try {
+    let answers = await dao.loadAnswers(id)
+    res.json(answers)
+  } catch (error) {
+    res.status(500).json(error)
+  }
+})
 // activate the server
 app.listen(PORT, () => {
   console.log(`Server listening at http://localhost:${PORT}`);

@@ -55,4 +55,16 @@ exports.loadOfferedAnswers = (id) => {
             resolve(rows)
         })
     })
+exports.loadAnswers = (id) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM given_answers WHERE surveyId=? ORDER BY idUser'
+        db.all(sql, [id], (err, rows) => {
+            if(err){
+                reject(err)
+                return;
+            }
+            resolve(rows)
+        })
+    })
+}
 }
