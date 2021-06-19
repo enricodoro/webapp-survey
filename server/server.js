@@ -33,6 +33,17 @@ app.get('/api/surveys', async (req, res) => {
   }
 })
 
+// get surveys of admin
+
+app.get('/api/surveys/:admin', async (req, res) => {
+  const admin = req.params.admin
+  try {
+    let surveys = await dao.loadAdminSurveys(admin)
+    res.json(surveys)
+  } catch (error) {
+    res.status(500).json(error)
+  }
+})
 // get questions of survey
 
 app.get('/api/questions/:id', async (req, res) => {

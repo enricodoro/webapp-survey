@@ -19,6 +19,18 @@ exports.loadSurveys = () => {
     }) 
 }
 
+exports.loadAdminSurveys = (admin) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM surveys, admins WHERE surveys.adminId=admins.id AND admins.username=?'
+        db.all(sql, [admin], (err,rows) => {
+            if(err){
+                reject(err)
+                return;
+            }
+            resolve(rows)
+        })
+    })
+}
 exports.loadQuestions = (id) => {
     return new Promise((resolve, reject) => {
         const sql = 'SELECT * FROM questions WHERE surveyId=?'

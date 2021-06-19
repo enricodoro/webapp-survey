@@ -6,6 +6,12 @@ async function loadSurveys() {
     return surveys
 }
 
+async function loadAdminSurveys(admin) {
+    const response = await fetch(url + "/api/surveys/" + admin)
+    const surveys = await response.json()
+    return surveys
+}
+
 async function loadQuestions(id) {
     const response = await fetch(url + "/api/questions/" + id)
     const questions = await response.json()
