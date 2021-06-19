@@ -1,18 +1,20 @@
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import { GiWaveSurfer } from "react-icons/gi";
 import { useEffect, useState } from 'react'
-import { Container, Navbar, Button, Row, Col, Card, ListGroup, ButtonGroup } from 'react-bootstrap'
-import { BrowserRouter as Router, Switch, Route, Redirect, useParams } from 'react-router-dom'
+import { Container, Col } from 'react-bootstrap'
+import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
 import TitleBar from './TitleBar.js'
 import SurveyCard from './SurveyCard.js'
 import NewSurvey from './NewSurvey.js'
 import SubmitSurvey from './SubmitSurvey.js'
+import Home from './Home.js'
 import API from './API';
 
 function App() {
   const [surveys, setSurveys] = useState([])
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [username, setUsername] = useState('');
 
   useEffect(() => {
     API.loadSurveys().then(dbSurveys => {
@@ -22,27 +24,36 @@ function App() {
 
   return (
     <Router>
-      <TitleBar />
-      <Container id="container">
+      <TitleBar loggedIn={loggedIn} setLoggedIn={setLoggedIn} username={username} setUsername={setUsername} />
+      <Container fluid className="d-flex flex-column mx-auto" id="container">
         <Switch>
+
           <Route path="/home" exact render={() =>
-            //to do admin home
-            <></>
-          }>
-          </Route>
-          <Route path="/new-survey" exact render={() =>
-            <NewSurvey></NewSurvey>
-          }>
-          </Route>
+            <>
+              {loggedIn ? <Home admin={username} /> : <Redirect to="/" />}
+            </>
+          } />
+
+          <Route path="/new-survey" render={() =>
+            <>
+              {loggedIn ? <NewSurvey /> : <Redirect to="/" />}
+            </>
+          } />
+
           <Route path="/" exact render={() =>
-            <Row className="justify-content-center" xs={1} md={2}>
-              {surveys.map((s) => <SurveyCard key={s.id} id={s.id} title={s.title} description={s.description} />)}
-            </Row>}>
-          </Route>
-          <Route path="/survey" exact render={({location}) =>
-            <SubmitSurvey surveyId={location.state.id}/>
-          }>
-          </Route>
+            <>
+              {!loggedIn ?
+                <Col md={12} className="d-flex flex-column mx-auto" style={{width: "60%"}}>
+                  {surveys.map((s) => <SurveyCard key={s.surveyId} id={s.surveyId} title={s.title} description={s.description} />)}
+                </Col>
+                : <Redirect to="/home" />}
+            </>} />
+
+          <Route path="/survey" exact render={({ location }) =>
+            <>
+              {!loggedIn ? <SubmitSurvey surveyId={location.state.id} title={location.state.title} /> : <Redirect to="/home" />}
+            </>} />
+
         </Switch>
       </Container>
     </Router>
