@@ -107,7 +107,7 @@ function OpenQuestion(props) {
         <Col md={10}>
             <Card id="question-card">
                 <Card.Body>
-                    <Card.Title className={props.question.optional ? "" : "mandatory"}>
+                    <Card.Title className={props.question.min === 0 ? "" : "mandatory"}>
                         {props.question.title}
                     </Card.Title>
                     <Form.Control disabled>
@@ -137,12 +137,12 @@ function Delete(props) {
 function QuestionCard(props) {
 
     if (props.question.open === 1)
-        return <SubmitOpenQuestion question={props.question} admin={props.admin}/>
+        return props.admin ? <ShowOpenAnswers question={props.question} answers={props.answers} /> : <SubmitOpenQuestion question={props.question} givenAnswers={props.givenAnswers} setGivenAnsers={props.setGivenAnsers}/>
     else
         if (props.question.max === 1)
-            return <SubmitSingleChoiceQuestion question={props.question} admin={props.admin}/>
+            return props.admin ? <ShowSingleChoiceAnswers question={props.question} surveyId={props.surveyId} answers={props.answers} /> : <SubmitSingleChoiceQuestion question={props.question} givenAnswers={props.givenAnswers} setGivenAnsers={props.setGivenAnsers} surveyId={props.surveyId} />
         else
-            return <SubmitMultipleChoiceQuestion question={props.question} admin={props.admin}/>
+            return props.admin ? <ShowMultipleChoiceAnswers question={props.question} surveyId={props.surveyId} answers={props.answers} /> : <SubmitMultipleChoiceQuestion question={props.question} givenAnswers={props.givenAnswers} setGivenAnsers={props.setGivenAnsers} surveyId={props.surveyId} />
 }
 
 function SubmitSingleChoiceQuestion(props) {
@@ -150,7 +150,7 @@ function SubmitSingleChoiceQuestion(props) {
     const [answers, setAnswers] = useState([])
 
     useEffect(() => {
-        API.loadOfferedAnswers(props.question.id).then(dbOfferedAnswers => {
+        API.loadOfferedAnswers(props.surveyId, props.question.qID).then(dbOfferedAnswers => {
             setAnswers(dbOfferedAnswers)
         })
     }, [])
@@ -162,11 +162,10 @@ function SubmitSingleChoiceQuestion(props) {
             </Card.Title>
             <Form>
                 {answers.map((a) => <Form.Check
-                    disabled={props.admin}
                     type="radio"
                     label={a.text}
-                    id={a.id}
-                    key={a.id}
+                    id={a.aID}
+                    key={a.aID}
                     name="formRadios"
                 />)}
             </Form>
@@ -187,7 +186,7 @@ function SubmitMultipleChoiceQuestion(props) {
     }
 
     useEffect(() => {
-        API.loadOfferedAnswers(props.question.id).then(dbOfferedAnswers => {
+        API.loadOfferedAnswers(props.surveyId, props.question.qID).then(dbOfferedAnswers => {
             setAnswers(dbOfferedAnswers)
         })
     }, [])
@@ -200,11 +199,10 @@ function SubmitMultipleChoiceQuestion(props) {
             <Form.Group>
                 <Form>
                     {answers.map((a) => <Form.Check
-                        disabled={props.admin}
                         type="checkbox"
                         label={a.text}
-                        id={a.id}
-                        key={a.id}
+                        id={a.aID}
+                        key={a.aID}
                         onChange={(e) => checkMax(e.target)}
                     />)}
                 </Form>
@@ -216,12 +214,101 @@ function SubmitMultipleChoiceQuestion(props) {
 
 function SubmitOpenQuestion(props) {
 
+    const handleChange = (e) => {
+        let old = props.givenAnswers
+    }
+
     return <Card className="mx-auto" id="question-card">
         <Card.Body>
-            <Card.Title className={props.question.optional ? "" : "mandatory"}>
+            <Card.Title className={props.question.min === 0 ? "" : "mandatory"}>
                 {props.question.title}
             </Card.Title>
-            <Form.Control disabled={props.admin} maxLength="200" placeholder="Type your answer here"></Form.Control>
+            <Form.Control onChange={(e) => handleChange(e.target.value)} maxLength="200" placeholder="Type your answer here"></Form.Control>
+        </Card.Body>
+    </Card>
+}
+
+function ShowSingleChoiceAnswers(props) {
+
+    const [answers, setAnswers] = useState([])
+
+    useEffect(() => {
+        API.loadOfferedAnswers(props.surveyId, props.question.qID).then(dbOfferedAnswers => {
+            setAnswers(dbOfferedAnswers)
+        })
+    }, [])
+
+    return <Card className="mx-auto" id="question-card">
+        <Card.Body>
+            <Card.Title className={props.question.min === 0 ? "" : "mandatory"}>
+                {props.question.title}
+            </Card.Title>
+            <Form>
+                {answers.map((a) => <Form.Check
+                    checked={props.answers.filter((ans) => ans.qID === props.question.qID).find((ans) => ans.aID === a.aID) ? true : false}
+                    disabled
+                    type="radio"
+                    label={a.text}
+                    id={a.aID}
+                    key={a.aID}
+                    name="formRadios"
+                />)}
+            </Form>
+        </Card.Body>
+    </Card>
+}
+
+function ShowMultipleChoiceAnswers(props) {
+
+    const [answers, setAnswers] = useState([])
+    const [max, setMax] = useState(0)
+
+    const checkMax = (e) => {
+        if (e.checked && max < props.question.max) setMax(old => old + 1)
+        else if (!e.checked && max > 0) setMax(old => old - 1)
+        if (max === props.question.max)
+            console.log(max)
+    }
+
+    useEffect(() => {
+        API.loadOfferedAnswers(props.surveyId, props.question.qID).then(dbOfferedAnswers => {
+            setAnswers(dbOfferedAnswers)
+        })
+    }, [])
+
+    return <Card className="mx-auto" id="question-card">
+        <Card.Body>
+            <Card.Title className={props.question.min === 0 ? "" : "mandatory"}>
+                {props.question.title}
+            </Card.Title>
+            <Form.Group>
+                <Form>
+                    {answers.map((a) => <Form.Check
+                        disabled
+                        checked={props.answers.filter((ans) => ans.qID === props.question.qID).find((ans) => ans.aID === a.aID) ? true : false}
+                        type="checkbox"
+                        label={a.text}
+                        id={a.aID}
+                        key={a.aID}
+                        onChange={(e) => checkMax(e.target)}
+                    />)}
+                </Form>
+                <Form.Text>A maximum of {props.question.max} answers can be chosen</Form.Text>
+            </Form.Group>
+        </Card.Body>
+    </Card>
+}
+
+function ShowOpenAnswers(props) {
+
+    let text = props.answers.filter((ans) => ans.qID === props.question.qID)[0].text
+
+    return <Card className="mx-auto" id="question-card">
+        <Card.Body>
+            <Card.Title className={props.question.min === 0 ? "" : "mandatory"}>
+                {props.question.title}
+            </Card.Title>
+            <Form.Control disabled maxLength="200" value={text!==null ? text : ""}></Form.Control>
         </Card.Body>
     </Card>
 }
