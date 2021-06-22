@@ -8,6 +8,7 @@ function SubmitSurvey(props) {
     const [givenAnswers, setGivenAnswers] = useState([])
     const [survey, setSurvey] = useState({})
     const [username, setUsername] = useState("")
+    const [id, setId] = useState(-1)
 
     // const answer = {
     //     idUser: ,
@@ -20,17 +21,27 @@ function SubmitSurvey(props) {
         setUsername(e)
     }
 
+    const handleSubmit = () => {
+        const user = {
+            username: username,
+            sID: props.surveyId
+        }
+        API.addUser(user).then(id => {
+            setId(id)
+        })
+    }
+
     useEffect(() => {
         API.loadQuestions(props.surveyId).then(dbQuestions => {
             setQuestions(dbQuestions)
         })
-    }, [])
+    }, [props.surveyId])
 
     useEffect(() => {
         API.loadSurvey(props.surveyId).then(dbSurvey => {
             setSurvey(dbSurvey)
         })
-    }, [])
+    }, [props.surveyId])
 
     return <Col className="d-flex flex-column mx-auto mt-3" style={{width: "60%"}}>
         <h1 className="text-center">{props.title}</h1>
@@ -43,10 +54,10 @@ function SubmitSurvey(props) {
                 </Form>
             </Card.Body>
         </Card>
-        <ListGroup setGivenAnswers={setGivenAnswers}>
-            {questions.map((q, i) => <QuestionCard question={q} key={q.id} />)}
+        <ListGroup>
+            {questions.map((q, i) => <QuestionCard question={q} surveyId={props.surveyId} key={i} givenAnswers={givenAnswers} setGivenAnswers={setGivenAnswers}/>)}
         </ListGroup>
-        <Button id="button" className="mx-auto my-3" size="lg">Submit</Button>
+        <Button id="button" className="mx-auto my-3" size="lg" onClick={()=>handleSubmit()}>Submit</Button>
     </Col>
 }
 
