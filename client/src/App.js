@@ -44,7 +44,7 @@ function App() {
             <>
               {!loggedIn ?
                 <Col md={12} className="d-flex flex-column mx-auto" style={{width: "60%"}}>
-                  {surveys.map((s) => <SurveyCard key={s.surveyId} id={s.surveyId} title={s.title} description={s.description} />)}
+                  {surveys.map((s, i) => <SurveyCard key={i} id={s.sID} title={s.title} description={s.description} />)}
                 </Col>
                 : <Redirect to="/home" />}
             </>} />
