@@ -18,8 +18,8 @@ async function loadQuestions(id) {
     return questions
 }
 
-async function loadOfferedAnswers(id) {
-    const response = await fetch(url + "/api/offered-answers/" + id)
+async function loadOfferedAnswers(sID, qID) {
+    const response = await fetch(url + "/api/offered-answers/" + sID + "/" + qID)
     const offeredAnswers = await response.json()
     return offeredAnswers
 }
@@ -42,13 +42,12 @@ async function loadSurvey(id) {
     return survey
 }
 
-
 async function logIn(credentials) {
     let response = await fetch(url + '/api/sessions', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(credentials),
-        }
+    }
     );
     if (response.ok) {
         const user = await response.json();
@@ -66,16 +65,30 @@ async function logIn(credentials) {
 }
 
 async function logOut() {
-    await fetch(url+'/api/sessions/current', { method: 'DELETE' });
+    await fetch(url + '/api/sessions/current', { method: 'DELETE' });
 }
 
-async function getAdmin(){
-    let response = await fetch(url+'/api/getCurrentUser');
+async function getAdmin() {
+    let response = await fetch(url + '/api/getCurrentUser');
     if (response.ok) {
         const userId = await response.json();
         return userId;
     }
 }
 
-const API = { loadSurveys, loadAdminSurveys, loadQuestions, loadAnswers, loadUsers, loadOfferedAnswers, loadSurvey, logIn, logOut, getAdmin }
+async function addUser(user) {
+    let response = await fetch(url + '/api/addUser/',
+        {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(user)
+        }
+    )
+    if (response.ok) {
+        const userId = await response.json();
+        return userId;
+    }
+}
+
+const API = { addUser, loadSurveys, loadAdminSurveys, loadQuestions, loadAnswers, loadUsers, loadOfferedAnswers, loadSurvey, logIn, logOut, getAdmin }
 export default API

@@ -9,7 +9,7 @@ const db = new sqlite.Database('survey.db', (err) => {
 
 exports.getAdmin = (username, password) => {
     return new Promise((resolve, reject) => {
-        const sql = 'SELECT * FROM admins WHERE username=?'
+        const sql = 'SELECT * FROM ADMINS WHERE username=?'
         db.get(sql, [username], (err, row) => {
             if (err)
                 reject(err); //db error
@@ -29,7 +29,7 @@ exports.getAdmin = (username, password) => {
 
 exports.getAdminById = (id) => {
     return new Promise((resolve, reject) => {
-      const sql = 'SELECT * FROM admins WHERE id = ?';
+      const sql = 'SELECT * FROM ADMINS WHERE id = ?';
         db.get(sql, [id], (err, row) => {
           if (err) 
             reject(err);
@@ -46,7 +46,7 @@ exports.getAdminById = (id) => {
 
 exports.loadSurveys = () => {
     return new Promise((resolve, reject) => {
-        const sql = 'SELECT * FROM surveys'
+        const sql = 'SELECT * FROM SURVEYS'
         db.all(sql, (err, rows) => {
             if (err) {
                 reject(err)
@@ -59,7 +59,7 @@ exports.loadSurveys = () => {
 
 exports.loadAdminSurveys = (admin) => {
     return new Promise((resolve, reject) => {
-        const sql = 'SELECT * FROM surveys, admins WHERE surveys.adminId=admins.id AND admins.username=?'
+        const sql = 'SELECT * FROM SURVEYS, ADMINS WHERE SURVEYS.adminId=ADMINS.id AND ADMINS.username=?'
         db.all(sql, [admin], (err,rows) => {
             if(err){
                 reject(err)
@@ -72,7 +72,7 @@ exports.loadAdminSurveys = (admin) => {
 
 exports.loadSurvey = (id) => {
     return new Promise((resolve, reject) => {
-        const sql = 'SELECT * FROM surveys WHERE surveyId=?'
+        const sql = 'SELECT * FROM SURVEYS WHERE sID=?'
         db.get(sql, [id], (err, row) => {
             if(err){
                 reject(err)
@@ -85,7 +85,7 @@ exports.loadSurvey = (id) => {
 
 exports.loadQuestions = (id) => {
     return new Promise((resolve, reject) => {
-        const sql = 'SELECT * FROM questions WHERE surveyId=?'
+        const sql = 'SELECT * FROM QUESTIONS WHERE sID=? ORDER BY qID'
         db.all(sql, [id], (err, rows) => {
             if(err){
                 reject(err)
@@ -96,10 +96,10 @@ exports.loadQuestions = (id) => {
     })
 }
 
-exports.loadOfferedAnswers = (id) => {
+exports.loadOfferedAnswers = (sID, qID) => {
     return new Promise((resolve, reject) => {
-        const sql = 'SELECT * FROM offered_answers WHERE questionId=?'
-        db.all(sql, [id], (err, rows) => {
+        const sql = 'SELECT * FROM OFFERED_ANSWERS WHERE qID=? AND sID=? ORDER BY aID'
+        db.all(sql, [qID, sID], (err, rows) => {
             if(err){
                 reject(err)
                 return;
@@ -111,7 +111,7 @@ exports.loadOfferedAnswers = (id) => {
 
 exports.loadAnswers = (id) => {
     return new Promise((resolve, reject) => {
-        const sql = 'SELECT * FROM given_answers WHERE surveyId=? ORDER BY idUser'
+        const sql = 'SELECT * FROM GIVEN_ANSWERS WHERE sID=? ORDER BY id'
         db.all(sql, [id], (err, rows) => {
             if(err){
                 reject(err)
@@ -124,7 +124,7 @@ exports.loadAnswers = (id) => {
 
 exports.loadUsers = (id) => {
     return new Promise((resolve, reject) => {
-        const sql = 'SELECT DISTINCT id, username FROM given_answers, users WHERE given_answers.surveyId=? AND given_answers.idUser=users.id ORDER BY users.id'
+        const sql = 'SELECT * FROM USERS WHERE sID=? ORDER BY uID'
         db.all(sql, [id], (err, rows) => {
             if(err){
                 reject(err)
@@ -132,5 +132,19 @@ exports.loadUsers = (id) => {
             }
             resolve(rows)
         })
+    })
+}
+
+exports.addUser = (user) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'INSERT INTO USERS (username, sID) VALUES (?, ?)'
+        db.run(sql, [user.username, user.sID],
+            (err) => {
+              if (err) {
+                reject(err);
+              }
+              resolve(this.lastID)
+            }
+          )
     })
 }
