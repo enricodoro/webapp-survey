@@ -13,8 +13,9 @@ import API from './API';
 
 function App() {
   const [surveys, setSurveys] = useState([])
-  const [loggedIn, setLoggedIn] = useState(false);
-  const [username, setUsername] = useState('');
+  const [loggedIn, setLoggedIn] = useState(false)
+  const [username, setUsername] = useState('')
+  const [adminID, setAdminID] = useState(-1)
 
   useEffect(() => {
     API.loadSurveys().then(dbSurveys => {
@@ -24,7 +25,7 @@ function App() {
 
   return (
     <Router>
-      <TitleBar loggedIn={loggedIn} setLoggedIn={setLoggedIn} username={username} setUsername={setUsername} />
+      <TitleBar loggedIn={loggedIn} setLoggedIn={setLoggedIn} username={username} setUsername={setUsername} setAdminID={setAdminID} />
       <Container fluid className="d-flex flex-column mx-auto" id="container">
         <Switch>
 
@@ -36,7 +37,7 @@ function App() {
 
           <Route path="/new-survey" render={() =>
             <>
-              {loggedIn ? <NewSurvey /> : <Redirect to="/" />}
+              {loggedIn ? <NewSurvey adminID={adminID}/> : <Redirect to="/" />}
             </>
           } />
 
