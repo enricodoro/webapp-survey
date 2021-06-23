@@ -1,7 +1,7 @@
 import { GiWaveSurfer } from "react-icons/gi";
 import { AiOutlineUser } from "react-icons/ai";
 import { useState, useEffect } from 'react'
-import { Navbar, Button, Tooltip, OverlayTrigger, Nav } from 'react-bootstrap'
+import { Navbar, Button, Tooltip, OverlayTrigger } from 'react-bootstrap'
 import { LoginModal } from './Login.js'
 import API from './API.js'
 
@@ -11,22 +11,23 @@ function TitleBar(props) {
     const doLogIn = async (credentials) => {
         try {
             const userId = await API.logIn(credentials);
-            props.setLoggedIn(true);
+            props.setLoggedIn(true)
         } catch (err) {
         }
     }
 
     const doLogOut = async () => {
-        await API.logOut();
-        props.setUsername('');
-        props.setLoggedIn(false);
+        await API.logOut()
+        props.setAdminID(-1)
+        props.setUsername('')
+        props.setLoggedIn(false)
     }
 
     useEffect(() => {
         const checkAuth = async () => {
             try {
                 const user = await API.getAdmin()
-                props.setUsername(user.username);
+                props.setUsername(user.username) 
                 props.setLoggedIn(true)
             }
             catch (err) {
@@ -38,7 +39,10 @@ function TitleBar(props) {
 
     useEffect(() => {
         if (props.loggedIn) {
-            API.getAdmin().then(user => { props.setUsername(user.username) })
+            API.getAdmin().then(user => { 
+                props.setUsername(user.username) 
+                props.setAdminID(user.id)
+            })
         }
     }, [props.loggedIn])
 
