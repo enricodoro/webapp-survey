@@ -37,7 +37,7 @@ function OpenedQuestionModal(props) {
 
         if (valid) {
             console.log(props.questions.length)
-            let q = { id: props.questions.length, title: title, open: true, optional: optional }
+            let q = { id: props.questions.length, title: title, open: true, min: optional ? 0 : 1, max: 0 }
             props.setQuestions(old => [...old, q])
             handleClose()
         }
