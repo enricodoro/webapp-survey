@@ -1,20 +1,18 @@
-import { ListGroup, Form, Col, Row, ButtonGroup, Button, Tooltip, OverlayTrigger } from "react-bootstrap"
-import { useState } from 'react'
+import { ListGroup, Form, Col, Row, ButtonGroup, Button } from "react-bootstrap"
+import { useState, useEffect } from 'react'
 import { QuestionCardAdmin } from './QuestionCard.js'
 import { OpenedQuestionModal, ClosedQuestionModal } from "./Modal.js"
-
-// question example: [id, title, open, min, max, optional, answers[]]
-
+import { Link } from 'react-router-dom'
+import API from "./API.js"
 
 function NewSurvey(props) {
     const [show, setShow] = useState([false, false])
-    const [showOverlay, setShowOverlay] = useState(false)
+    const [enable, setEnable] = useState(true)
     const [questions, setQuestions] = useState([])
     const [title, setTitle] = useState("")
-    const [descripton, setDescription] = useState("")
+    const [description, setDescription] = useState("")
 
     const handleTitle = (val) => {
-        showOverlay ? setShowOverlay(false) : 
         setTitle(val)
     }
 
@@ -22,24 +20,54 @@ function NewSurvey(props) {
         setDescription(val)
     }
 
+    useEffect(() => {
+        if (title.length > 0 && questions.length > 0)
+            setEnable(false)
+        else setEnable(true)
+    }, [questions, title])
+
     const handleSave = () => {
-        let valid = true
-        if (title.length === 0) valid = false
-        if (valid) {
-            //save
-        } else {
-            setShowOverlay(true)
+        let survey = {
+            adminID: props.adminID,
+            title: title,
+            description: description
         }
+        API.addSurvey(survey).then(sID => {
+            questions.forEach((q, qID) => {
+                let question = {
+                    sID: sID,
+                    qID: qID,
+                    title: q.title,
+                    open: q.open,
+                    min: q.min,
+                    max: q.max,
+                    answers: q.answers
+                }
+                API.addQuestion(question).then((questionID) => {
+                    q.answers.forEach((a, aID) => {
+                        let answer = {
+                            sID: sID,
+                            qID: questionID,
+                            aID: aID,
+                            text: a
+                        }
+                        API.addAnswer(answer).then(() => {
+                            console.log("END SAVING IN DB")
+                        })
+                    })
+                })
+            })
+        })
     }
 
-    return <Row className="d-flex flex-column mx-auto" style={{width:"60%"}}>
+    return <Row className="d-flex flex-column mx-auto" style={{ width: "60%" }}>
         <TitleAdmin handleTitle={handleTitle} handleDescription={handleDescription} />
         <ListGroup>
             {questions.map((q) => <QuestionCardAdmin questions={questions} setQuestions={setQuestions} question={q} />)}
         </ListGroup>
         <OpenedQuestionModal questions={questions} setQuestions={setQuestions} show={show} setShow={setShow} />
         <ClosedQuestionModal questions={questions} setQuestions={setQuestions} show={show} setShow={setShow} />
-        <Controls setShow={setShow} handleSave={handleSave} showOverlay={showOverlay}/>
+        <Controls setShow={setShow} handleSave={handleSave} enable={enable} title={title} />
     </Row>
 }
 
@@ -64,23 +92,17 @@ function Controls(props) {
         props.setShow(arr)
     }
 
-    const renderTooltip = (props) => (
-        <Tooltip id="button-tooltip" {...props}>
-          A title is required
-        </Tooltip>
-      );
-
-    return <ButtonGroup size="lg" className="mt-3 mb-3" style={{ width: "100%" }}>
-        <Button id="btn-outlined" onClick={() => handleShow(0)}>New open-ended question</Button>
-        <Button id="btn-outlined" onClick={() => handleShow(1)}>New close-ended question</Button>
-        <OverlayTrigger
-            show={props.showOverlay}
-            placement="right"
-            overlay={renderTooltip}
-        >
-            <Button variant="outline-success" onClick={() => props.handleSave()}>Save</Button>
-        </OverlayTrigger>
-    </ButtonGroup>
+    return <Col className="d-flex flex-column mx-auto">
+        <ButtonGroup size="lg" className="mt-3 mb-3" style={{ width: "100%" }}>
+            <Button id="btn-outlined" onClick={() => handleShow(0)}>New open-ended question</Button>
+            <Button id="btn-outlined" onClick={() => handleShow(1)}>New close-ended question</Button>
+        </ButtonGroup>
+        <Link className="mx-auto mb-3" style={{ textDecoration: 'none' }} to={{
+            pathname: "/home"
+        }}>
+            <Button size="lg" disabled={props.enable} variant="outline-success" onClick={() => props.handleSave()}>Save</Button>
+        </Link>
+    </Col>
 }
 
 export default NewSurvey;
