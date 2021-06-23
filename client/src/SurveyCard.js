@@ -7,7 +7,7 @@ function SurveyCard(props) {
     <Card.Body>
       <Card.Title>{props.title}</Card.Title>
       <Card.Text>{props.description}</Card.Text>
-      <Link to={{
+      <Link style={{ textDecoration: 'none' }} to={{
         pathname: "/survey",
         state: { id: props.id, title: props.title }
       }}>
