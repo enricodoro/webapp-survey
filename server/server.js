@@ -91,11 +91,53 @@ app.get('/api/getCurrentUser', function (req, res) {
 })
 
 app.post('/api/addUser/', async (req, res) => {
-  const user = req.body.user
+  const user = req.body
   try {
-    await dao.addUser(user)
+    let result = await dao.addUser(user)
+    res.status(201).json(result)
   }
   catch (error) {
+    res.status(503).json(error)
+  }
+})
+
+app.post('/api/addUserAnswer/', async (req, res) => {
+  const answer = req.body
+  try {
+    let result = await dao.addUserAnswer(answer)
+    res.status(201).json(result)
+  }
+  catch (error) {
+    res.status(503).json(error)
+  }
+})
+
+app.post('/api/addSurvey/', isLoggedIn, async (req, res) => {
+  const survey = req.body
+  try {
+    let result = await dao.addSurvey(survey)
+    res.status(201).json(result)
+  } catch (error) {
+    res.status(503).json(error)
+  }
+})
+
+app.post('/api/addQuestion/', isLoggedIn, async (req, res) => {
+  const question = req.body
+  try {
+    let result = await dao.addQuestion(question)
+    res.status(201).json(result)
+  } catch (error) {
+    res.status(503).json(error)
+  }
+})
+
+app.post('/api/addAnswer/', isLoggedIn, async (req, res) => {
+  const answer = req.body
+  try {
+    let result = await dao.addAnswer(answer)
+    res.status(201).json(result)
+  } catch (error) {
     res.status(503).json(error)
   }
 })
@@ -113,7 +155,7 @@ app.get('/api/surveys', async (req, res) => {
 
 // get surveys of admin
 
-app.get('/api/surveys/:admin', async (req, res) => {
+app.get('/api/surveys/:admin', isLoggedIn, async (req, res) => {
   const admin = req.params.admin
   try {
     let surveys = await dao.loadAdminSurveys(admin)

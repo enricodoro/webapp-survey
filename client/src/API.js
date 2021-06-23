@@ -48,31 +48,31 @@ async function logIn(credentials) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(credentials),
     }
-    );
+    )
     if (response.ok) {
-        const user = await response.json();
-        return user.id;
+        const user = await response.json()
+        return user.id
     }
     else {
         try {
-            const errDetail = await response.json();
-            throw errDetail.message;
+            const errDetail = await response.json()
+            throw errDetail.message
         }
         catch (err) {
-            throw err;
+            throw err
         }
     }
 }
 
 async function logOut() {
-    await fetch(url + '/api/sessions/current', { method: 'DELETE' });
+    await fetch(url + '/api/sessions/current', { method: 'DELETE' })
 }
 
 async function getAdmin() {
-    let response = await fetch(url + '/api/getCurrentUser');
+    let response = await fetch(url + '/api/getCurrentUser')
     if (response.ok) {
-        const userId = await response.json();
-        return userId;
+        const userId = await response.json()
+        return userId
     }
 }
 
@@ -85,10 +85,63 @@ async function addUser(user) {
         }
     )
     if (response.ok) {
-        const userId = await response.json();
-        return userId;
+        const uID = await response.json()
+        return uID
     }
 }
 
-const API = { addUser, loadSurveys, loadAdminSurveys, loadQuestions, loadAnswers, loadUsers, loadOfferedAnswers, loadSurvey, logIn, logOut, getAdmin }
+async function addUserAnswer(answer) {
+    let response = await fetch(url + '/api/addUserAnswer/',
+        {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(answer)
+        }
+    )
+    if (response.ok) {
+        await response.json()
+    }
+}
+
+async function addSurvey(survey) {
+    const response = await fetch(url + '/api/addSurvey/',
+        {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(survey)
+        }
+    )
+    if (response.ok) {
+        let surveyId = await response.json()
+        return surveyId
+    }
+}
+
+async function addQuestion(question) {
+    let response = await fetch(url + '/api/addQuestion/',
+        {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(question)
+        }
+    )
+    if (response.ok) {
+        let questionID = await response.json()
+        return questionID
+    }
+}
+
+async function addAnswer(answer) {
+    let response = await fetch(url + '/api/addAnswer/',
+        {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(answer)
+        }
+    )
+    if (response.ok) {
+    }
+}
+
+const API = { addUser, addUserAnswer, addQuestion, addAnswer, addSurvey, loadSurveys, loadAdminSurveys, loadQuestions, loadAnswers, loadUsers, loadOfferedAnswers, loadSurvey, logIn, logOut, getAdmin }
 export default API
