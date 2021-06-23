@@ -65,7 +65,7 @@ function Home(props) {
     }, [userAnswers])
 
     const handleClickSurvey = (id) => {
-        if (id != surveyId) {
+        if (id !== surveyId) {
             setReady(false)
             setPos(-1)
             setAnswers([])
