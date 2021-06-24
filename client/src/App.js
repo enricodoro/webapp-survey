@@ -2,7 +2,7 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import { useEffect, useState } from 'react'
-import { Container, Col } from 'react-bootstrap'
+import { Container, Row } from 'react-bootstrap'
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
 import TitleBar from './TitleBar.js'
 import SurveyCard from './SurveyCard.js'
@@ -21,7 +21,7 @@ function App() {
     API.loadSurveys().then(dbSurveys => {
       setSurveys(dbSurveys)
     })
-  }, [])
+  }, [loggedIn])
 
   return (
     <Router>
@@ -37,16 +37,16 @@ function App() {
 
           <Route path="/new-survey" render={() =>
             <>
-              {loggedIn ? <NewSurvey adminID={adminID}/> : <Redirect to="/" />}
+              {loggedIn ? <NewSurvey adminID={adminID} /> : <Redirect to="/" />}
             </>
           } />
 
           <Route path="/" exact render={() =>
             <>
               {!loggedIn ?
-                <Col md={12} className="d-flex flex-column mx-auto" style={{width: "60%"}}>
-                  {surveys.map((s, i) => <SurveyCard key={i} id={s.sID} title={s.title} description={s.description} />)}
-                </Col>
+                <Row className="d-flex flex-row mx-auto" style={{ width: "40%" }}>
+                    {surveys.map((s, i) => <SurveyCard key={i} id={s.sID} title={s.title} description={s.description} />)}
+                </Row>
                 : <Redirect to="/home" />}
             </>} />
 
