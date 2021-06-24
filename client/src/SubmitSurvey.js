@@ -7,8 +7,10 @@ import API from './API';
 function SubmitSurvey(props) {
     const [questions, setQuestions] = useState([])
     const [givenAnswers, setGivenAnswers] = useState([])
-    const [survey, setSurvey] = useState({})
     const [username, setUsername] = useState("")
+    const [required, setRequired] = useState(0)
+    const [count, setCount] = useState(0)
+    const [enable, setEnable] = useState(true)
 
     // givenAnswer = {qID: n, aID: n, text: string}
 
@@ -30,22 +32,27 @@ function SubmitSurvey(props) {
                     aID: a.aID,
                     text: a.text
                 }
-                API.addUserAnswer(answer).then(() => {
-
+                API.addUserAnswer(answer).then((status) => {
+                    console.log(status)
                 })
             })
         })
     }
 
     useEffect(() => {
-        API.loadQuestions(props.surveyId).then(dbQuestions => {
-            setQuestions(dbQuestions)
-        })
-    }, [props.surveyId])
+        if (count !== 0) {
+            console.log(required + "/" + count)
+            if (username.length > 0 && required === count)
+                setEnable(false)
+            else
+                setEnable(true)
+        }
+    }, [username, required, count])
 
     useEffect(() => {
-        API.loadSurvey(props.surveyId).then(dbSurvey => {
-            setSurvey(dbSurvey)
+        API.loadQuestions(props.surveyId).then(dbQuestions => {
+            setQuestions(dbQuestions)
+            setCount(dbQuestions.filter((q) => q.min === 1).length)
         })
     }, [props.surveyId])
 
@@ -57,16 +64,17 @@ function SubmitSurvey(props) {
                 <Card.Title className="mandatory">Insert your name</Card.Title>
                 <Form>
                     <Form.Control maxLength="30" onChange={(e) => handleName(e.target.value)} placeholder="Insert your name or a username" />
+                    <Form.Text>{username.length}/30</Form.Text>
                 </Form>
             </Card.Body>
         </Card>
         <ListGroup>
-            {questions.map((q, i) => <QuestionCard question={q} surveyId={props.surveyId} key={i} givenAnswers={givenAnswers} setGivenAnswers={setGivenAnswers} />)}
+            {questions.map((q, i) => <QuestionCard setRequired={setRequired} question={q} surveyId={props.surveyId} key={i} givenAnswers={givenAnswers} setGivenAnswers={setGivenAnswers} />)}
         </ListGroup>
         <Link className="mx-auto my-3" style={{ textDecoration: 'none' }} to={{
             pathname: "/"
         }}>
-            <Button id="button" size="lg" onClick={() => handleSubmit()}>Submit</Button>
+            <Button disabled={enable} id="button" size="lg" onClick={() => handleSubmit()}>Submit</Button>
         </Link>
     </Col>
 }
