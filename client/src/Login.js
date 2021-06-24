@@ -1,5 +1,5 @@
-import { Modal, Button, Form, InputGroup } from 'react-bootstrap'
-import { useState } from 'react'
+import { Modal, Button, Form, InputGroup, Alert } from 'react-bootstrap'
+import { useEffect, useState } from 'react'
 
 function LoginModal(props) {
 
@@ -16,6 +16,13 @@ function LoginModal(props) {
         setPassword(val)
     }
 
+    useEffect(() => {
+        if(props.loggedIn){
+            setErrorMessage("")
+            props.setShow(false)
+        }
+    }, [props.loggedIn])
+
     const handleSubmit = (event) => {
         const form = event.currentTarget;
         if (form.checkValidity() === false) {
@@ -28,16 +35,25 @@ function LoginModal(props) {
         const credentials = { username, password };
 
         let valid = true;
-        if (username === '' || password === '' || password.length < 6)
+        if (username === '' || password === '')
             valid = false;
 
         if (valid) {
-            props.login(credentials);
-            props.setShow(false)
+            props.login(credentials)
+            if(!props.loggedIn){
+                setErrorMessage('These credentials are not valid.')
+            }
         }
         else {
-            // show a better error message...
-            setErrorMessage('Incorrect username and/or password, please fix it.')
+            if(username===""){
+                if(password==="")
+                    setErrorMessage('Please, insert a username and a password.')
+                else
+                    setErrorMessage('Please, insert a username.')
+            }
+            else if(password===""){
+                setErrorMessage('Please, insert a password.')
+            }
         }
 
         setValidated(true);
@@ -49,6 +65,7 @@ function LoginModal(props) {
         show={props.show}
     >
         <Form noValidate validated={validated} onSubmit={handleSubmit}>
+            {errorMessage ? <Alert variant='danger'>{errorMessage}</Alert> : ''}
             <Modal.Header closeButton onClick={() => props.setShow(false)}>
                 <Modal.Title id="contained-modal-title-vcenter">
                     Login to create your surveys!
@@ -58,7 +75,7 @@ function LoginModal(props) {
                 <Form.Group>
                     <InputGroup hasValidation>
                         <InputGroup.Prepend>
-                            <InputGroup.Text style={{width: "7rem"}} id="prependUsername">Username</InputGroup.Text>
+                            <InputGroup.Text style={{ width: "7rem" }} id="prependUsername">Username</InputGroup.Text>
                         </InputGroup.Prepend>
                         <Form.Control
                             required
@@ -72,8 +89,8 @@ function LoginModal(props) {
                 </Form.Group>
                 <Form.Group>
                     <InputGroup hasValidation>
-                        <InputGroup.Prepend> 
-                            <InputGroup.Text style={{width: "7rem"}} id="prependPassword">Password</InputGroup.Text>
+                        <InputGroup.Prepend>
+                            <InputGroup.Text style={{ width: "7rem" }} id="prependPassword">Password</InputGroup.Text>
                         </InputGroup.Prepend>
                         <Form.Control
                             required
