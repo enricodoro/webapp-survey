@@ -51,8 +51,8 @@ function NewSurvey(props) {
                             aID: aID,
                             text: a
                         }
-                        API.addAnswer(answer).then(() => {
-                            console.log("END SAVING IN DB")
+                        API.addAnswer(answer).then((status) => {
+                            console.log(status)
                         })
                     })
                 })
