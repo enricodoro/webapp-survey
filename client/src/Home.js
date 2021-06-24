@@ -89,13 +89,13 @@ function Home(props) {
         </Col>
         <Col className="d-flex flex-column mx-auto" md={6} id="main">
             {ready ? <>
-                <ButtonGroup className="mx-auto mt-2">
+                <ButtonGroup className="mt-4 mb-2">
                     <Button disabled={pos === 0} variant="outline-danger" id="left" onClick={(e) => clickLeft(e)}><FiArrowLeft /></Button>
                     <Button disabled variant="outline-danger">{currentUser.username} ({pos + 1} of {users.length})</Button>
                     <Button disabled={pos === users.length - 1} variant="outline-danger" id="right" onClick={(e) => clickRight(e)}><FiArrowRight /></Button>
                 </ButtonGroup>
                 <SurveyQuestions questions={questions} answers={userAnswers} surveyId={surveyId} /> </>
-                : <div className="d-flex flex-column mx-auto my-3"><Spinner animation='border' variant='danger' /></div>}
+                : <></>}
         </Col>
     </Row>
 }
