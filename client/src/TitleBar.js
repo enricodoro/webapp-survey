@@ -3,6 +3,7 @@ import { AiOutlineUser } from "react-icons/ai";
 import { useState, useEffect } from 'react'
 import { Navbar, Button, Tooltip, OverlayTrigger } from 'react-bootstrap'
 import { LoginModal } from './Login.js'
+import { Link } from 'react-router-dom'
 import API from './API.js'
 
 function TitleBar(props) {
@@ -19,7 +20,7 @@ function TitleBar(props) {
     const doLogOut = async () => {
         await API.logOut()
         props.setAdminID(-1)
-        props.setUsername('')
+        props.setUsername("")
         props.setLoggedIn(false)
     }
 
@@ -27,7 +28,7 @@ function TitleBar(props) {
         const checkAuth = async () => {
             try {
                 const user = await API.getAdmin()
-                props.setUsername(user.username) 
+                props.setUsername(user.username)
                 props.setLoggedIn(true)
             }
             catch (err) {
@@ -39,8 +40,8 @@ function TitleBar(props) {
 
     useEffect(() => {
         if (props.loggedIn) {
-            API.getAdmin().then(user => { 
-                props.setUsername(user.username) 
+            API.getAdmin().then(user => {
+                props.setUsername(user.username)
                 props.setAdminID(user.id)
             })
         }
@@ -52,13 +53,13 @@ function TitleBar(props) {
             Surfeys
         </Navbar.Brand>
         {props.loggedIn ? <ShowUsername doLogOut={doLogOut} username={props.username} /> : <LoginButton setShow={setShow} />}
-        <LoginModal show={show} setShow={setShow} login={doLogIn} />
+        <LoginModal show={show} setShow={setShow} login={doLogIn} loggedIn={props.loggedIn} />
     </Navbar>
 }
 
 function LoginButton(props) {
     return <Button id="login" onClick={() => props.setShow(true)}>
-        Login as admin
+        Login
     </Button>
 }
 
@@ -68,10 +69,14 @@ function ShowUsername(props) {
         delay={{ show: 250, hide: 400 }}
         overlay={<Tooltip id="tooltip-logout">Logout</Tooltip>}
     >
-        <Navbar.Brand onClick={() => props.doLogOut()}>
-            Welcome {props.username}!{' '}
-            <AiOutlineUser id="logo" size="32" />
-        </Navbar.Brand>
+        <Link style={{ textDecoration: 'none' }} to={{
+            pathname: "/"
+        }}>
+            <Navbar.Brand onClick={() => props.doLogOut()}>
+                Welcome {props.username}!{' '}
+                <AiOutlineUser id="logo" size="32" />
+            </Navbar.Brand>
+        </Link>
     </OverlayTrigger>
 }
 
