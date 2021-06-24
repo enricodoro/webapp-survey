@@ -171,6 +171,7 @@ exports.addAnswer = (answer) => {
                     reject(err)
                     return
                 }
+                resolve(true)
             })
     })
 }
@@ -207,7 +208,7 @@ exports.addUserAnswer = (answer) => {
                     reject(err)
                     return
                 }
-                
+                resolve(true)
             }
         )
     })

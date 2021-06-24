@@ -71,7 +71,7 @@ app.post('/api/sessions', function (req, res, next) {
         return next(err)
 
       // req.user contains the authenticated user, we send all the user info back
-      // this is coming from userDao.getUser()
+      // this is coming from dao.getAdmin()
       return res.json(req.user)
     })
   })(req, res, next)
@@ -147,7 +147,7 @@ app.post('/api/addAnswer/', isLoggedIn, async (req, res) => {
 app.get('/api/surveys', async (req, res) => {
   try {
     let surveys = await dao.loadSurveys()
-    res.json(surveys)
+    res.status(200).json(surveys)
   } catch (error) {
     res.status(500).json(error)
   }
