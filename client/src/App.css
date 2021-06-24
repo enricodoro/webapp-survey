@@ -1,3 +1,5 @@
+/* NAVBAR */
+
 #navbar{
   padding-left: 20px;
   padding-right: 20px;
@@ -5,6 +7,8 @@
   justify-content: space-between;
   min-height: 8vh;
 }
+
+/* GENERIC BUTTON */
 
 #button{
   background-color: crimson;
@@ -16,6 +20,8 @@
   box-shadow: 0 0 0 1px rgba(220, 20, 60, 0.671), 0 0 0 0.2rem rgba(220, 20, 60, 0.671) !important;
 }
 
+/* LOGIN BUTTON */
+
 #login{
   align-self: center;
   background-color: crimson;
@@ -26,6 +32,8 @@
 #login:focus {
   box-shadow: 0 0 0 1px rgba(220, 20, 60, 0.671), 0 0 0 0.2rem rgba(220, 20, 60, 0.671) !important;
 }
+
+/* GENERIC OUTLINED BUTTON */
 
 #btn-outlined{
   background-color: transparent;
@@ -42,9 +50,13 @@
   box-shadow: 0 0 0 1px rgba(220, 20, 60, 0.671), 0 0 0 0.2rem rgba(220, 20, 60, 0.671) !important;
 }
 
+/* GENERIC IMAGE */
+
 #logo{
   color: crimson;
 }
+
+/* MAIN DIVS */
 
 #container{
   min-height: 92vh;
@@ -59,6 +71,8 @@
   min-height: 92vh;
 }
 
+/* QUESTION CARD */
+
 #question-card{
   width: 100%;
   min-height: 10rem;
@@ -66,13 +80,6 @@
   margin-bottom: 10px;
   border-left-color: crimson;
   border-left-width: 5px;
-}
-
-#title-card{
-  border-width: 0px;
-  max-width: 90%;
-  height: fit-content;
-  margin-top: 20px;
 }
 
 #survey-card{
@@ -127,4 +134,44 @@
 
 #badge{
   background-color: white;
+}
+
+#left{
+  max-width: fit-content;
+}
+
+#right{
+  max-width: fit-content;
+}
+
+.custom-checkbox .custom-control-input:checked ~ .custom-control-label::before{
+  background-color: crimson !important;
+  border-color: rgb(173, 18, 49) !important;
+}
+.custom-checkbox .custom-control-input:checked:focus ~ .custom-control-label::before {
+  box-shadow: 0 0 0 1px #fff, 0 0 0 0.2rem rgba(224, 22, 63, 0.521) !important;
+}
+.custom-checkbox .custom-control-input:focus ~ .custom-control-label::before {
+  box-shadow: 0 0 0 1px #fff, 0 0 0 0.2rem rgba(224, 22, 63, 0.521) !important;
+  border-color: rgb(173, 18, 49) !important;
+}
+.custom-checkbox .custom-control-input:active ~ .custom-control-label::before {
+  background-color: rgb(173, 18, 49) !important;
+  border-color: rgb(173, 18, 49) !important;
+}
+
+.custom-radio .custom-control-input:checked ~ .custom-control-label::before{
+  background-color: crimson !important;
+  border-color: rgb(173, 18, 49) !important;
+}
+.custom-radio .custom-control-input:checked:focus ~ .custom-control-label::before {
+  box-shadow: 0 0 0 1px #fff, 0 0 0 0.2rem rgba(224, 22, 63, 0.521) !important;
+}
+.custom-radio .custom-control-input:focus ~ .custom-control-label::before {
+  box-shadow: 0 0 0 1px #fff, 0 0 0 0.2rem rgba(224, 22, 63, 0.521) !important;
+  border-color: rgb(173, 18, 49) !important;
+}
+.custom-radio .custom-control-input:active ~ .custom-control-label::before {
+  background-color: rgb(173, 18, 49) !important;
+  border-color: rgb(173, 18, 49) !important;
 }
