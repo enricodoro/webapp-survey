@@ -11,7 +11,7 @@
 
 ## API Server
 
-- **GET** `/api/surveys`
+### **GET** `/api/surveys`
   - **Request parameters:** _none_
   - **Response:** `200 OK` (success) or `500 Internal Server Error`(generic error)
   - **Response body:** an array of objects corresponing to all the surveys
@@ -34,7 +34,7 @@
     ...
   ]
   ```
-- **GET** `/api/surveys/:admin`
+### **GET** `/api/surveys/:admin`
   - **Request parameters:** the username of the admin
   - **Response:** `200 OK` (success) or `500 Internal Server Error`(generic error)
   - **Response body:** an array of objects corresponding to all the surveys created by that admin
@@ -50,7 +50,7 @@
     }
   ]
   ```
-- **GET** `/api/surveys/:id`
+### **GET** `/api/surveys/:id`
 
   - **Request parameters:** the id of the survey
   - **Response:** `200 OK` (success) or `500 Internal Server Error`(generic error)
@@ -68,7 +68,7 @@
   }
   ```
 
-- **GET** `/api/questions/:id`
+### **GET** `/api/questions/:id`
 
   - **Request parameters:** the id of the survey to which thes questions belong
   - **Response:** `200 OK` (success) or `500 Internal Server Error`(generic error)
@@ -98,7 +98,7 @@
   ]
   ```
 
-- **GET** `/api/offered-answers/:sID/:qID`
+### **GET** `/api/offered-answers/:sID/:qID`
 
   - **Request parameters:** the id of the survey and of the question
   - **Response:** `200 OK` (success) or `500 Internal Server Error`(generic error)
@@ -130,7 +130,7 @@
   ]
   ```
 
-- **GET** `/api/answers/:id`
+### **GET** `/api/answers/:id`
 
   - **Request parameters:** the id of the survey from which to retrieve user answers
   - **Response:** `200 OK` (success) or `500 Internal Server Error`(generic error)
@@ -174,7 +174,7 @@
   ]
   ```
 
-- **GET** `/api/users/:id`
+### **GET** `/api/users/:id`
 
   - **Request parameters:** the id of the survey
   - **Response:** `200 OK` (success) or `500 Internal Server Error`(generic error)
@@ -202,35 +202,35 @@
   ]
   ```
 
-- **POST** `/api/sessions/`
+### **POST** `/api/sessions/`
   - **Request body:** an object containing the user credentials
   - **Response:** `200 OK` (success) or `401 Unauthorized`(unauthorized user)
   - **Response parameters:** the id of the logged admin
-- **DELETE** `/api/sessions/current/`
+### **DELETE** `/api/sessions/current/`
   - **Request parameters:** _none_
   - **Response:** _none_
   - **Response parameters:** _none_
-- **GET** `/api/getCurrentUser`
+### **GET** `/api/getCurrentUser`
   - **Request parameters:** _none_
   - **Response:** `200 OK` (success) or `401 Unauthorized`(unauthenticated user)
   - **Response parameters:** the id of the logged admin
-- **POST** `/api/addUser/`
+### **POST** `/api/addUser/`
   - **Request body:** an object corresponding to a new user that has answered to a survey
   - **Response:** `201 Created` (success) or `503 Service Unavailable`(generic error)
   - **Response parameters:** the id of the new user
-- **POST** `/api/addUserAnswer/`
+### **POST** `/api/addUserAnswer/`
   - **Request body:** an object corresponding to a single answer given by a user to a certain question (of a specific survey)
   - **Response:** `201 Created` (success) or `503 Service Unavailable`(generic error)
   - **Response parameters:** _none_
-- **POST** `/api/addSurvey/`
+### **POST** `/api/addSurvey/`
   - **Request body:** an object corresponding to a new survey created by an admin
   - **Response:** `201 Created` (success) or `503 Service Unavailable`(generic error)
   - **Response parameters:** the id of the survey created
-- **POST** `/api/addQuestion/`
+### **POST** `/api/addQuestion/`
   - **Request body:** an object corresponding to a new question related to a specific survey
   - **Response:** `201 Created` (success) or `503 Service Unavailable`(generic error)
   - **Response parameters:** the id of the question created
-- **POST** `/api/addAnswer/`
+### **POST** `/api/addAnswer/`
   - **Request body:** an object corresponding to a new possible answer of a question related to a specific survey
   - **Response:** `201 Created` (success) or `503 Service Unavailable`(generic error)
   - **Response parameters:** _none_
