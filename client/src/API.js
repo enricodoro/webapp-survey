@@ -44,7 +44,7 @@ async function loadUsers(id) {
     return users
 }
 
-// laod a specific survey
+// load a specific survey
 async function loadSurvey(id) {
     const response = await fetch(url + "/api/surveys/" + id)
     const survey = await response.json()

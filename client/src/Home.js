@@ -1,4 +1,4 @@
-import { Button, ButtonGroup, Row, Col, ListGroup, Badge, Spinner } from 'react-bootstrap'
+import { Button, ButtonGroup, Row, Col, ListGroup, Badge } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import API from './API'
@@ -16,14 +16,14 @@ function Home(props) {
     const [pos, setPos] = useState(-1)
     const [ready, setReady] = useState(false)
 
-    const clickRight = (e) => {
+    const clickRight = () => {
         let p = pos + 1
         setPos(p)
         setCurrentUser(users[p])
         setUserAnswers(answers.filter((a) => a.id === users[p].uID))
     }
 
-    const clickLeft = (e) => {
+    const clickLeft = () => {
         let p = pos - 1
         setPos(p)
         setCurrentUser(users[p])

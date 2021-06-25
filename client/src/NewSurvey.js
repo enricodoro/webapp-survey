@@ -1,4 +1,4 @@
-import { ListGroup, Form, Col, Row, ButtonGroup, Button } from "react-bootstrap"
+import { ListGroup, Form, Col, Row, ButtonGroup, Button, InputGroup } from "react-bootstrap"
 import { useState, useEffect } from 'react'
 import { QuestionCardAdmin } from './QuestionCard.js'
 import { OpenedQuestionModal, ClosedQuestionModal } from "./Modal.js"
@@ -61,7 +61,7 @@ function NewSurvey(props) {
     }
 
     return <Row className="d-flex flex-column mx-auto" style={{ width: "60%" }}>
-        <TitleAdmin handleTitle={handleTitle} handleDescription={handleDescription} />
+        <TitleAdmin title={title} handleTitle={handleTitle} description={description} handleDescription={handleDescription} />
         <ListGroup>
             {questions.map((q) => <QuestionCardAdmin questions={questions} setQuestions={setQuestions} question={q} />)}
         </ListGroup>
@@ -74,13 +74,19 @@ function NewSurvey(props) {
 function TitleAdmin(props) {
     return <Col md={12} className="mt-3">
         <Form>
-            <Form.Group id="title">
+            <InputGroup id="title">
                 <Form.Control required size="lg" maxLength="32" type="text" placeholder="Your survey title" onChange={(e) => props.handleTitle(e.target.value)} />
-            </Form.Group>
-            <Form.Group id="description">
+                <InputGroup.Append>
+                    <InputGroup.Text id="append">{props.title.length}/64</InputGroup.Text>
+                </InputGroup.Append>
+            </InputGroup>
+            <InputGroup id="description">
                 <Form.Control required maxLength="64" type="text" placeholder="Your survey description" onChange={(e) => props.handleDescription(e.target.value)} />
-            </Form.Group>
-            <h6 className="mandatory">Mandatory questions will be marked with</h6>
+                <InputGroup.Append>
+                    <InputGroup.Text id="append">{props.description.length}/64</InputGroup.Text>
+                </InputGroup.Append>
+            </InputGroup>
+            <h6 className="mandatory mt-4">Mandatory questions will be marked with</h6>
         </Form>
     </Col>
 }

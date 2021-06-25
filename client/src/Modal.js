@@ -1,5 +1,5 @@
-import { Modal, Button, Form, Col, Row, InputGroup, OverlayTrigger, Tooltip } from 'react-bootstrap'
-import { useState } from 'react'
+import { Modal, Button, Form, Col, Row, InputGroup, Alert, Tooltip } from 'react-bootstrap'
+import { useState, useEffect } from 'react'
 import { AiOutlineDelete } from "react-icons/ai";
 
 function OpenedQuestionModal(props) {
@@ -57,13 +57,17 @@ function OpenedQuestionModal(props) {
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <Form.Group controlId="validateTitle">
+                <InputGroup controlId="validateTitle">
                     <Form.Control required size="lg" maxLength="64" type="text" placeholder="Type a question" onChange={(e) => handleTitle(e.target.value)} />
-                </Form.Group>
+                    <InputGroup.Append>
+                        <InputGroup.Text id="append">{title.length}/64</InputGroup.Text>
+                    </InputGroup.Append>
+                </InputGroup>
             </Modal.Body>
             <Modal.Footer>
                 <Form.Group>
                     <Form.Check
+                        custom
                         type="switch"
                         id="optional"
                         label="Optional"
@@ -89,11 +93,11 @@ function ClosedQuestionModal(props) {
     }
 
     const handleMax = (val) => {
-        setMax(val)
+        setMax(Number(val))
     }
 
     const handleMin = (val) => {
-        setMin(val)
+        setMin(Number(val))
     }
 
     const addNewAnswer = () => {
@@ -162,9 +166,12 @@ function ClosedQuestionModal(props) {
         </Modal.Header>
         <Modal.Body>
             <Form noValidate validated={validated}>
-                <Form.Group>
+                <InputGroup className="mb-3">
                     <Form.Control required size="lg" maxLength="64" type="text" placeholder="Type a question" onChange={(e) => handleTitle(e.target.value)} />
-                </Form.Group>
+                    <InputGroup.Append>
+                        <InputGroup.Text id="append">{title.length}/64</InputGroup.Text>
+                    </InputGroup.Append>
+                </InputGroup>
                 <Form.Group id="answers-list">
                     {answers.map((a, i) => <NewAnswer handleDelete={handleDelete} handle={handleChange} ansText={a} ansId={i} />)}
                 </Form.Group>
@@ -183,7 +190,7 @@ function ClosedQuestionModal(props) {
                     <Form.Control isInvalid={min > max} id="max" as="select" onChange={(e) => handleMax(e.target.value)}>
                         {answers.map((a, i) => <option>{i + 1}</option>)}
                     </Form.Control>
-                    <Form.Control.Feedback placement="right" type="invalid" tooltip>The maximum number of answers must be greater than or equal to the minimum.</Form.Control.Feedback>
+                    <Form.Control.Feedback type="invalid" tooltip>The maximum number of answers must be greater than or equal to the minimum.</Form.Control.Feedback>
                     <Form.Text className="text-muted">Maximum number of answers</Form.Text>
                 </Form.Group>
             </Form.Row>
@@ -197,12 +204,128 @@ function ClosedQuestionModal(props) {
 }
 
 function NewAnswer(props) {
-    return <InputGroup className="mb-3">
-        <Form.Control className="mr-3" required onChange={(e) => props.handle(e, props.ansId)} placeholder="Type a possible answer" value={props.ansText} />
-        <Button variant="outline-danger" onClick={(e) => props.handleDelete(e, props.ansId)}>
-            <AiOutlineDelete />
-        </Button>
-    </InputGroup>
+    return <Row className="d-flex mr-auto">
+        <Col md={11}>
+            <InputGroup className="mb-3">
+                <Form.Control maxLength="64" required onChange={(e) => props.handle(e, props.ansId)} placeholder="Type a possible answer" value={props.ansText} />
+                <InputGroup.Append>
+                    <InputGroup.Text id="append">{props.ansText.length}/64</InputGroup.Text>
+                </InputGroup.Append>
+            </InputGroup>
+        </Col>
+        <Col md={1}>
+            <Button variant="outline-danger" onClick={(e) => props.handleDelete(e, props.ansId)}>
+                <AiOutlineDelete />
+            </Button>
+        </Col>
+    </Row>
 }
 
-export { OpenedQuestionModal, ClosedQuestionModal }
+function LoginModal(props) {
+
+    const [errorMessage, setErrorMessage] = useState('');
+    const [validated, setValidated] = useState(false)
+    const [username, setUsername] = useState("")
+    const [password, setPassword] = useState("")
+
+    const handleUsername = (val) => {
+        setUsername(val)
+    }
+
+    const handlePassword = (val) => {
+        setPassword(val)
+    }
+
+    useEffect(() => {
+        if (props.loggedIn) {
+            setErrorMessage("")
+            props.setShow(false)
+        }
+    }, [props.loggedIn])
+
+    const handleSubmit = (event) => {
+        const form = event.currentTarget;
+        if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+
+        event.preventDefault();
+        setErrorMessage('');
+        const credentials = { username, password };
+
+        let valid = true;
+        if (username === '' || password === '')
+            valid = false;
+
+        if (valid) {
+            props.login(credentials)
+            if (!props.loggedIn) setErrorMessage('These credentials are not valid.')
+        }
+        else {
+            if (username === "") {
+                if (password === "")
+                    setErrorMessage('Please, insert a username and a password.')
+                else
+                    setErrorMessage('Please, insert a username.')
+            }
+            else if (password === "") {
+                setErrorMessage('Please, insert a password.')
+            }
+        }
+
+        setValidated(true);
+    };
+
+    return <Modal
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+        show={props.show}
+        onHide={() => props.setShow(false)}
+    >
+        <Form noValidate validated={validated} onSubmit={handleSubmit}>
+            {errorMessage ? <Alert variant='danger'>{errorMessage}</Alert> : ''}
+            <Modal.Header closeButton onClick={() => props.setShow(false)}>
+                <Modal.Title id="contained-modal-title-vcenter">
+                    Login to create your surveys!
+                </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <Form.Group>
+                    <InputGroup hasValidation>
+                        <InputGroup.Prepend>
+                            <InputGroup.Text style={{ width: "7rem" }} id="prependUsername">Username</InputGroup.Text>
+                        </InputGroup.Prepend>
+                        <Form.Control
+                            required
+                            id="username"
+                            name="username"
+                            type="text"
+                            onChange={(e) => handleUsername(e.target.value)}
+                            value={username}
+                        />
+                    </InputGroup>
+                </Form.Group>
+                <Form.Group>
+                    <InputGroup hasValidation>
+                        <InputGroup.Prepend>
+                            <InputGroup.Text style={{ width: "7rem" }} id="prependPassword">Password</InputGroup.Text>
+                        </InputGroup.Prepend>
+                        <Form.Control
+                            required
+                            type="password"
+                            id="password"
+                            onChange={(e) => handlePassword(e.target.value)}
+                            value={password}
+                        />
+                    </InputGroup>
+                </Form.Group>
+            </Modal.Body>
+            <Modal.Footer>
+                <Button type="submit" variant="success">Login</Button>
+            </Modal.Footer>
+        </Form>
+    </Modal>
+}
+
+export { OpenedQuestionModal, ClosedQuestionModal, LoginModal }

@@ -52,7 +52,7 @@ function SubmitSurvey(props) {
     useEffect(() => {
         API.loadQuestions(props.surveyId).then(dbQuestions => {
             setQuestions(dbQuestions)
-            setCount(dbQuestions.filter((q) => q.min === 1).length)
+            setCount(dbQuestions.filter((q) => q.min >= 1).length)
         })
     }, [props.surveyId])
 

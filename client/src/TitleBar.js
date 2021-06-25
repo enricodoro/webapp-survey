@@ -2,7 +2,7 @@ import { GiWaveSurfer } from "react-icons/gi";
 import { AiOutlineUser } from "react-icons/ai";
 import { useState, useEffect } from 'react'
 import { Navbar, Button, Tooltip, OverlayTrigger } from 'react-bootstrap'
-import { LoginModal } from './Login.js'
+import { LoginModal } from './Modal.js'
 import { Link } from 'react-router-dom'
 import API from './API.js'
 
@@ -13,6 +13,7 @@ function TitleBar(props) {
         try {
             const userId = await API.logIn(credentials);
             props.setLoggedIn(true)
+            return userId
         } catch (err) {
         }
     }

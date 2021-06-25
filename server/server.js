@@ -72,7 +72,7 @@ app.post('/api/sessions', function (req, res, next) {
 
       // req.user contains the authenticated user, we send all the user info back
       // this is coming from dao.getAdmin()
-      return res.json(req.user)
+      return res.status(200).json(req.user)
     })
   })(req, res, next)
 })
@@ -159,7 +159,7 @@ app.get('/api/surveys/:admin', isLoggedIn, async (req, res) => {
   const admin = req.params.admin
   try {
     let surveys = await dao.loadAdminSurveys(admin)
-    res.json(surveys)
+    res.status(200).json(surveys)
   } catch (error) {
     res.status(500).json(error)
   }
@@ -171,7 +171,7 @@ app.get('/api/surveys/:id', async (req, res) => {
   const id = req.params.id
   try {
     let survey = await dao.loadSurvey(id)
-    res.json(survey)
+    res.status(200).json(survey)
   } catch (error) {
     res.status(500).json(error)
   }
@@ -183,7 +183,7 @@ app.get('/api/questions/:id', async (req, res) => {
   const id = req.params.id;
   try {
     let questions = await dao.loadQuestions(id)
-    res.json(questions)
+    res.status(200).json(questions)
   } catch (error) {
     res.status(500).json(error)
   }
@@ -196,7 +196,7 @@ app.get('/api/offered-answers/:sID/:qID', async (req, res) => {
   const qID = req.params.qID
   try {
     let offeredAnswers = await dao.loadOfferedAnswers(sID, qID)
-    res.json(offeredAnswers)
+    res.status(200).json(offeredAnswers)
   } catch (error) {
     res.status(500).json(error)
   }
@@ -208,7 +208,7 @@ app.get('/api/answers/:id', async (req, res) => {
   const id = req.params.id
   try {
     let answers = await dao.loadAnswers(id)
-    res.json(answers)
+    res.status(200).json(answers)
   } catch (error) {
     res.status(500).json(error)
   }
@@ -220,7 +220,7 @@ app.get('/api/users/:id', async (req, res) => {
   const id = req.params.id
   try {
     let users = await dao.loadUsers(id)
-    res.json(users)
+    res.status(200).json(users)
   } catch (error) {
     res.status(500).json(error)
   }

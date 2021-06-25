@@ -87,7 +87,7 @@
   height: fit-content;
   border-top-color: crimson;
   border-top-width: 5px;
-  margin: 10px;
+  margin-top: 20px;
 }
 
 #username-card{
@@ -144,6 +144,11 @@
   max-width: fit-content;
 }
 
+#append{
+  background-color: whitesmoke;
+  color: grey;
+}
+
 .custom-checkbox .custom-control-input:checked ~ .custom-control-label::before{
   background-color: crimson !important;
   border-color: rgb(173, 18, 49) !important;
@@ -172,6 +177,22 @@
   border-color: rgb(173, 18, 49) !important;
 }
 .custom-radio .custom-control-input:active ~ .custom-control-label::before {
+  background-color: rgb(173, 18, 49) !important;
+  border-color: rgb(173, 18, 49) !important;
+}
+
+.custom-switch .custom-control-input:checked ~ .custom-control-label::before{
+  background-color: crimson !important;
+  border-color: rgb(173, 18, 49) !important;
+}
+.custom-switch .custom-control-input:checked:focus ~ .custom-control-label::before {
+  box-shadow: 0 0 0 1px #fff, 0 0 0 0.2rem rgba(224, 22, 63, 0.521) !important;
+}
+.custom-switch .custom-control-input:focus ~ .custom-control-label::before {
+  box-shadow: 0 0 0 1px #fff, 0 0 0 0.2rem rgba(224, 22, 63, 0.521) !important;
+  border-color: rgb(173, 18, 49) !important;
+}
+.custom-switch .custom-control-input:active ~ .custom-control-label::before {
   background-color: rgb(173, 18, 49) !important;
   border-color: rgb(173, 18, 49) !important;
 }

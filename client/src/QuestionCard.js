@@ -96,9 +96,13 @@ function MultipleChoiceQuestion(props) {
                             disabled
                         />)}
                     </Form>
-                    {props.question.min === 0
-                        ? <Form.Text>A maximum of {props.question.max} answers can be chosen.</Form.Text>
-                        : <Form.Text>At least {props.question.min} answers must be chosen, but not more than {props.question.max}.</Form.Text>}
+                    {props.question.min !== 0
+                        ? props.question.min === 1
+                            ? <Form.Text>At least {props.question.min} answer must be chosen, but not more than {props.question.max}.</Form.Text>
+                            : props.question.min !== props.question.max
+                                ? <Form.Text>At least {props.question.min} answers must be chosen, but not more than {props.question.max}.</Form.Text>
+                                : <Form.Text>You have to choose {props.question.min} answers.</Form.Text>
+                        : <Form.Text>A maximum of {props.question.max} answers can be chosen.</Form.Text>}
                 </Card.Body>
             </Card>
         </Col>
@@ -248,9 +252,13 @@ function SubmitMultipleChoiceQuestion(props) {
                         onChange={(e) => handleChange(e.target, i + 1)}
                     />)}
                 </Form>
-                {props.question.min === 0
-                    ? <Form.Text>A maximum of {props.question.max} answers can be chosen.</Form.Text>
-                    : <Form.Text>At least {props.question.min} answers must be chosen, but not more than {props.question.max}.</Form.Text>}
+                {props.question.min !== 0
+                    ? props.question.min === 1
+                        ? <Form.Text>At least {props.question.min} answer must be chosen, but not more than {props.question.max}.</Form.Text>
+                        : props.question.min !== props.question.max
+                            ? <Form.Text>At least {props.question.min} answers must be chosen, but not more than {props.question.max}.</Form.Text>
+                            : <Form.Text>You have to choose {props.question.min} answers.</Form.Text>
+                    : <Form.Text>A maximum of {props.question.max} answers can be chosen.</Form.Text>}
             </Form.Group>
         </Card.Body>
     </Card>
@@ -372,9 +380,13 @@ function ShowMultipleChoiceAnswers(props) {
                         onChange={(e) => checkMax(e.target)}
                     />)}
                 </Form>
-                {props.question.min === 0
-                    ? <Form.Text>A maximum of {props.question.max} answers can be chosen.</Form.Text>
-                    : <Form.Text>At least {props.question.min} answers must be chosen, but not more than {props.question.max}.</Form.Text>}
+                {props.question.min !== 0
+                    ? props.question.min === 1
+                        ? <Form.Text>At least {props.question.min} answer must be chosen, but not more than {props.question.max}.</Form.Text>
+                        : props.question.min !== props.question.max
+                            ? <Form.Text>At least {props.question.min} answers must be chosen, but not more than {props.question.max}.</Form.Text>
+                            : <Form.Text>You have to choose {props.question.min} answers.</Form.Text>
+                    : <Form.Text>A maximum of {props.question.max} answers can be chosen.</Form.Text>}
             </Form.Group>
         </Card.Body>
     </Card>
