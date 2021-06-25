@@ -309,12 +309,20 @@
 ## Screenshot
 
 ### Normal user interface
-![user-home](./screenshots/user-home.png)
-![survey-answer](./screenshots/survey-answer.png)
+*User home screen*
+![user-home](./screenshots/user-home.png "User home screen")
+*User answering a survey*
+![survey-answer](./screenshots/survey-answer.png "User answering a survey")
 
 ### Admin interface
-![admin-home](./screenshots/admin-home.png)
-![new-survey](./screenshots/new-survey.png)
+*Admin home screen*
+![admin-home](./screenshots/admin-home.png "Admin home screen")
+*Admin creating a new open-ended question*
+![new-open-ended](./screenshots/new-open-ended.png "Admin creating a new open-ended question")
+*Admin creating a new close-ended question*
+![new-close-ended](./screenshots/new-close-ended.png "Admin creating a new close-ended question")
+*Admin creating a new survey*
+![new-survey](./screenshots/new-survey.png "Admin creating a new survey")
 
 ## Users Credentials
 
