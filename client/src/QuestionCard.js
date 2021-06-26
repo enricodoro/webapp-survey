@@ -204,18 +204,21 @@ function SubmitMultipleChoiceQuestion(props) {
 
     const [answers, setAnswers] = useState([])
     const [checked, setChecked] = useState([])
+    const [flag, setFlag] = useState(false)
 
     const handleChange = (e, id) => {
         let ans = { qID: props.question.qID, aID: id - 1, text: null }
         if (props.givenAnswers.find((a) => a.qID === ans.qID && a.aID === ans.aID)) {
-            if (props.question.min >= 1 && props.givenAnswers.filter((a) => a.qID === ans.qID).length <= props.question.min) {
+            if (props.question.min >= 1 && props.givenAnswers.filter((a) => a.qID === ans.qID).length <= props.question.min && !flag) {
                 props.setRequired(old => old - 1)
+                setFlag(true)
             }
             props.setGivenAnswers(old => old.filter((a) => (a.qID !== ans.qID) || (a.qID === ans.qID && a.aID !== ans.aID)))
         }
         else {
             if (props.question.min >= 1 && props.givenAnswers.filter((a) => a.qID === ans.qID).length === props.question.min - 1) {
                 props.setRequired(old => old + 1)
+                setFlag(false)
             }
             props.setGivenAnswers(old => [...old, ans])
         }
