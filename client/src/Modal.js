@@ -182,7 +182,7 @@ function ClosedQuestionModal(props) {
                         <option>0</option>
                         {answers.map((a, i) => <option>{i + 1}</option>)}
                     </Form.Control>
-                    <Form.Text className="text-muted">Minimum number of answers</Form.Text>
+                    <Form.Text className="text-muted">Minimum number of answers. If 0, the question is implicitly marked as optional.</Form.Text>
                 </Form.Group>
             </Form.Row>
             <Form.Row>
