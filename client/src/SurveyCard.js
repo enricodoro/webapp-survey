@@ -21,4 +21,4 @@ function SurveyCard(props) {
   </Col>
 }
 
-export default SurveyCard;
+export default SurveyCard

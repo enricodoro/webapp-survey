@@ -1,8 +1,8 @@
-import { Card, Form, Button, ButtonGroup, Col, Row } from "react-bootstrap"
-import { useState, useEffect } from "react";
-import { FiArrowDown, FiArrowUp } from "react-icons/fi";
-import { AiOutlineDelete } from "react-icons/ai";
-import API from './API';
+import { Card, Form, Button, ButtonGroup, Col, Row, Toast } from "react-bootstrap"
+import { useState, useEffect } from "react"
+import { FiArrowDown, FiArrowUp } from "react-icons/fi"
+import { AiOutlineDelete } from "react-icons/ai"
+import API from './API'
 
 function QuestionCardAdmin(props) {
     const clickButton = (e) => {
@@ -160,6 +160,11 @@ function QuestionCard(props) {
 function SubmitSingleChoiceQuestion(props) {
 
     const [answers, setAnswers] = useState([])
+    const [message, setMessage] = useState('')
+
+    const handleErrors = (err) => {
+        setMessage({ msg: err.error, type: 'danger' })
+    }
 
     const handleChange = (id) => {
         let ans = { qID: props.question.qID, aID: id - 1, text: null }
@@ -176,28 +181,33 @@ function SubmitSingleChoiceQuestion(props) {
     useEffect(() => {
         API.loadOfferedAnswers(props.surveyId, props.question.qID).then(dbOfferedAnswers => {
             setAnswers(dbOfferedAnswers)
-        })
+        }).catch(e => handleErrors(e))
     }, [])
 
-    return <Card className="mx-auto" id="question-card">
-        <Card.Body>
-            <Card.Title className={props.question.min === 0 ? "" : "mandatory"}>
-                {props.question.title}
-            </Card.Title>
-            <Form>
-                {answers.map((a, i) => <Form.Check
-                    custom
-                    className="checkAnswer"
-                    type="radio"
-                    label={a.text}
-                    id={`${props.question.qID}${i}`}
-                    key={`${props.question.qID}${i}`}
-                    name={"formRadio-" + props.question.qID}
-                    onChange={() => handleChange(i + 1)}
-                />)}
-            </Form>
-        </Card.Body>
-    </Card>
+    return <>
+        <Toast show={message !== ''} onClose={() => setMessage('')} delay={3000} autohide>
+            <Toast.Body>{message?.msg}</Toast.Body>
+        </Toast>
+        <Card className="mx-auto" id="question-card">
+            <Card.Body>
+                <Card.Title className={props.question.min === 0 ? "" : "mandatory"}>
+                    {props.question.title}
+                </Card.Title>
+                <Form>
+                    {answers.map((a, i) => <Form.Check
+                        custom
+                        className="checkAnswer"
+                        type="radio"
+                        label={a.text}
+                        id={`${props.question.qID}${i}`}
+                        key={`${props.question.qID}${i}`}
+                        name={"formRadio-" + props.question.qID}
+                        onChange={() => handleChange(i + 1)}
+                    />)}
+                </Form>
+            </Card.Body>
+        </Card>
+    </>
 }
 
 function SubmitMultipleChoiceQuestion(props) {
@@ -205,6 +215,11 @@ function SubmitMultipleChoiceQuestion(props) {
     const [answers, setAnswers] = useState([])
     const [checked, setChecked] = useState([])
     const [flag, setFlag] = useState(false)
+    const [message, setMessage] = useState('')
+
+    const handleErrors = (err) => {
+        setMessage({ msg: err.error, type: 'danger' })
+    }
 
     const handleChange = (e, id) => {
         let ans = { qID: props.question.qID, aID: id - 1, text: null }
@@ -233,38 +248,43 @@ function SubmitMultipleChoiceQuestion(props) {
     useEffect(() => {
         API.loadOfferedAnswers(props.surveyId, props.question.qID).then(dbOfferedAnswers => {
             setAnswers(dbOfferedAnswers)
-        })
+        }).catch(e => handleErrors(e))
     }, [])
 
-    return <Card className="mx-auto" id="question-card">
-        <Card.Body>
-            <Card.Title className={props.question.min === 0 ? "" : "mandatory"}>
-                {props.question.title}
-            </Card.Title>
-            <Form.Group>
-                <Form>
-                    {answers.map((a, i) => <Form.Check
-                        custom
-                        className="checkAnswer"
-                        disabled={checked.length >= props.question.max && !checked.includes(i)}
-                        type="checkbox"
-                        label={a.text}
-                        id={`${props.question.qID}${i}`}
-                        key={`${props.question.qID}${i}`}
-                        name={"formCheck-" + props.question.qID}
-                        onChange={(e) => handleChange(e.target, i + 1)}
-                    />)}
-                </Form>
-                {props.question.min !== 0
-                    ? props.question.min === 1
-                        ? <Form.Text>At least {props.question.min} answer must be chosen, but not more than {props.question.max}.</Form.Text>
-                        : props.question.min !== props.question.max
-                            ? <Form.Text>At least {props.question.min} answers must be chosen, but not more than {props.question.max}.</Form.Text>
-                            : <Form.Text>You have to choose {props.question.min} answers.</Form.Text>
-                    : <Form.Text>A maximum of {props.question.max} answers can be chosen.</Form.Text>}
-            </Form.Group>
-        </Card.Body>
-    </Card>
+    return <>
+        <Toast show={message !== ''} onClose={() => setMessage('')} delay={3000} autohide>
+            <Toast.Body>{message?.msg}</Toast.Body>
+        </Toast>
+        <Card className="mx-auto" id="question-card">
+            <Card.Body>
+                <Card.Title className={props.question.min === 0 ? "" : "mandatory"}>
+                    {props.question.title}
+                </Card.Title>
+                <Form.Group>
+                    <Form>
+                        {answers.map((a, i) => <Form.Check
+                            custom
+                            className="checkAnswer"
+                            disabled={checked.length >= props.question.max && !checked.includes(i)}
+                            type="checkbox"
+                            label={a.text}
+                            id={`${props.question.qID}${i}`}
+                            key={`${props.question.qID}${i}`}
+                            name={"formCheck-" + props.question.qID}
+                            onChange={(e) => handleChange(e.target, i + 1)}
+                        />)}
+                    </Form>
+                    {props.question.min !== 0
+                        ? props.question.min === 1
+                            ? <Form.Text>At least {props.question.min} answer must be chosen, but not more than {props.question.max}.</Form.Text>
+                            : props.question.min !== props.question.max
+                                ? <Form.Text>At least {props.question.min} answers must be chosen, but not more than {props.question.max}.</Form.Text>
+                                : <Form.Text>You have to choose {props.question.min} answers.</Form.Text>
+                        : <Form.Text>A maximum of {props.question.max} answers can be chosen.</Form.Text>}
+                </Form.Group>
+            </Card.Body>
+        </Card>
+    </>
 }
 
 function SubmitOpenQuestion(props) {
@@ -316,39 +336,54 @@ function SubmitOpenQuestion(props) {
 function ShowSingleChoiceAnswers(props) {
 
     const [answers, setAnswers] = useState([])
+    const [message, setMessage] = useState('')
+
+    const handleErrors = (err) => {
+        setMessage({ msg: err.error, type: 'danger' })
+    }
 
     useEffect(() => {
         API.loadOfferedAnswers(props.surveyId, props.question.qID).then(dbOfferedAnswers => {
             setAnswers(dbOfferedAnswers)
-        })
+        }).catch(e => handleErrors(e))
     }, [])
 
-    return <Card className="mx-auto" id="question-card">
-        <Card.Body>
-            <Card.Title className={props.question.min === 0 ? "" : "mandatory"}>
-                {props.question.title}
-            </Card.Title>
-            <Form>
-                {answers.map((a, i) => <Form.Check
-                    custom
-                    className="checkAnswer"
-                    checked={props.answers.filter((ans) => ans.qID === props.question.qID).find((ans) => ans.aID === a.aID) ? true : false}
-                    disabled
-                    type="radio"
-                    label={a.text}
-                    id={`${props.question.qID}${i}`}
-                    key={`${props.question.qID}${i}`}
-                    name={"formRadio-" + props.question.qID}
-                />)}
-            </Form>
-        </Card.Body>
-    </Card>
+    return <>
+        <Toast show={message !== ''} onClose={() => setMessage('')} delay={3000} autohide>
+            <Toast.Body>{message?.msg}</Toast.Body>
+        </Toast>
+        <Card className="mx-auto" id="question-card">
+            <Card.Body>
+                <Card.Title className={props.question.min === 0 ? "" : "mandatory"}>
+                    {props.question.title}
+                </Card.Title>
+                <Form>
+                    {answers.map((a, i) => <Form.Check
+                        custom
+                        className="checkAnswer"
+                        checked={props.answers.filter((ans) => ans.qID === props.question.qID).find((ans) => ans.aID === a.aID) ? true : false}
+                        disabled
+                        type="radio"
+                        label={a.text}
+                        id={`${props.question.qID}${i}`}
+                        key={`${props.question.qID}${i}`}
+                        name={"formRadio-" + props.question.qID}
+                    />)}
+                </Form>
+            </Card.Body>
+        </Card>
+    </>
 }
 
 function ShowMultipleChoiceAnswers(props) {
 
     const [answers, setAnswers] = useState([])
     const [max, setMax] = useState(0)
+    const [message, setMessage] = useState('')
+
+    const handleErrors = (err) => {
+        setMessage({ msg: err.error, type: 'danger' })
+    }
 
     const checkMax = (e) => {
         if (e.checked && max < props.question.max) setMax(old => old + 1)
@@ -360,39 +395,44 @@ function ShowMultipleChoiceAnswers(props) {
     useEffect(() => {
         API.loadOfferedAnswers(props.surveyId, props.question.qID).then(dbOfferedAnswers => {
             setAnswers(dbOfferedAnswers)
-        })
+        }).catch(e => handleErrors(e))
     }, [])
 
-    return <Card className="mx-auto" id="question-card">
-        <Card.Body>
-            <Card.Title className={props.question.min === 0 ? "" : "mandatory"}>
-                {props.question.title}
-            </Card.Title>
-            <Form.Group>
-                <Form>
-                    {answers.map((a, i) => <Form.Check
-                        custom
-                        className="checkAnswer"
-                        disabled
-                        checked={props.answers.filter((ans) => ans.qID === props.question.qID).find((ans) => ans.aID === a.aID) ? true : false}
-                        type="checkbox"
-                        label={a.text}
-                        id={`${props.question.qID}${i}`}
-                        key={`${props.question.qID}${i}`}
-                        name={"formCheck-" + props.question.qID}
-                        onChange={(e) => checkMax(e.target)}
-                    />)}
-                </Form>
-                {props.question.min !== 0
-                    ? props.question.min === 1
-                        ? <Form.Text>At least {props.question.min} answer must be chosen, but not more than {props.question.max}.</Form.Text>
-                        : props.question.min !== props.question.max
-                            ? <Form.Text>At least {props.question.min} answers must be chosen, but not more than {props.question.max}.</Form.Text>
-                            : <Form.Text>You have to choose {props.question.min} answers.</Form.Text>
-                    : <Form.Text>A maximum of {props.question.max} answers can be chosen.</Form.Text>}
-            </Form.Group>
-        </Card.Body>
-    </Card>
+    return <>
+        <Toast show={message !== ''} onClose={() => setMessage('')} delay={3000} autohide>
+            <Toast.Body>{message?.msg}</Toast.Body>
+        </Toast>
+        <Card className="mx-auto" id="question-card">
+            <Card.Body>
+                <Card.Title className={props.question.min === 0 ? "" : "mandatory"}>
+                    {props.question.title}
+                </Card.Title>
+                <Form.Group>
+                    <Form>
+                        {answers.map((a, i) => <Form.Check
+                            custom
+                            className="checkAnswer"
+                            disabled
+                            checked={props.answers.filter((ans) => ans.qID === props.question.qID).find((ans) => ans.aID === a.aID) ? true : false}
+                            type="checkbox"
+                            label={a.text}
+                            id={`${props.question.qID}${i}`}
+                            key={`${props.question.qID}${i}`}
+                            name={"formCheck-" + props.question.qID}
+                            onChange={(e) => checkMax(e.target)}
+                        />)}
+                    </Form>
+                    {props.question.min !== 0
+                        ? props.question.min === 1
+                            ? <Form.Text>At least {props.question.min} answer must be chosen, but not more than {props.question.max}.</Form.Text>
+                            : props.question.min !== props.question.max
+                                ? <Form.Text>At least {props.question.min} answers must be chosen, but not more than {props.question.max}.</Form.Text>
+                                : <Form.Text>You have to choose {props.question.min} answers.</Form.Text>
+                        : <Form.Text>A maximum of {props.question.max} answers can be chosen.</Form.Text>}
+                </Form.Group>
+            </Card.Body>
+        </Card>
+    </>
 }
 
 function ShowOpenAnswers(props) {
@@ -410,4 +450,4 @@ function ShowOpenAnswers(props) {
     </Card>
 }
 
-export { QuestionCardAdmin, QuestionCard };
+export { QuestionCardAdmin, QuestionCard }

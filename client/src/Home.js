@@ -1,9 +1,9 @@
-import { Button, ButtonGroup, Row, Col, ListGroup, Badge } from 'react-bootstrap'
-import { Link } from 'react-router-dom'
+import { Button, ButtonGroup, Row, Col, ListGroup, Badge, Toast } from 'react-bootstrap'
 import { useState, useEffect } from 'react'
-import API from './API'
-import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
+import { Link } from 'react-router-dom'
+import { FiArrowLeft, FiArrowRight } from "react-icons/fi"
 import { QuestionCard } from './QuestionCard'
+import API from './API'
 
 function Home(props) {
     const [surveys, setSurveys] = useState([])
@@ -15,6 +15,11 @@ function Home(props) {
     const [userAnswers, setUserAnswers] = useState([])
     const [pos, setPos] = useState(-1)
     const [ready, setReady] = useState(false)
+    const [message, setMessage] = useState('')
+
+    const handleErrors = (err) => {
+        setMessage({ msg: err.error, type: 'danger' })
+    }
 
     const clickRight = () => {
         let p = pos + 1
@@ -33,20 +38,20 @@ function Home(props) {
     useEffect(() => {
         API.loadAdminSurveys(props.admin).then(dbSurveys => {
             setSurveys(dbSurveys)
-        })
+        }).catch(e => handleErrors(e))
     }, [props.admin])
 
     useEffect(() => {
         if (surveyId !== -1) {
             API.loadQuestions(surveyId).then(dbQuestions => {
                 setQuestions(dbQuestions)
-            })
+            }).catch(e => handleErrors(e))
             API.loadAnswers(surveyId).then(dbAnswers => {
                 setAnswers(dbAnswers)
-            })
+            }).catch(e => handleErrors(e))
             API.loadUsers(surveyId).then(dbUsers => {
                 setUsers(dbUsers)
-            })
+            }).catch(e => handleErrors(e))
             setPos(0)
         }
     }, [surveyId])
@@ -88,6 +93,9 @@ function Home(props) {
             </Link>
         </Col>
         <Col className="d-flex flex-column mx-auto" md={6} id="main">
+            <Toast show={message !== ''} onClose={() => setMessage('')} delay={3000} autohide>
+                <Toast.Body>{message?.msg}</Toast.Body>
+            </Toast>
             {ready ? <>
                 <ButtonGroup className="mt-4 mb-2">
                     <Button disabled={pos === 0} variant="outline-danger" id="left" onClick={(e) => clickLeft(e)}><FiArrowLeft /></Button>

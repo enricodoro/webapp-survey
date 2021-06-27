@@ -1,8 +1,8 @@
-import { ListGroup, Form, Col, Row, ButtonGroup, Button, InputGroup } from "react-bootstrap"
+import { ListGroup, Form, Col, Row, ButtonGroup, Button, InputGroup, Toast } from "react-bootstrap"
+import { Link } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { QuestionCardAdmin } from './QuestionCard.js'
 import { OpenedQuestionModal, ClosedQuestionModal } from "./Modal.js"
-import { Link } from 'react-router-dom'
 import API from "./API.js"
 
 function NewSurvey(props) {
@@ -11,6 +11,11 @@ function NewSurvey(props) {
     const [questions, setQuestions] = useState([])
     const [title, setTitle] = useState("")
     const [description, setDescription] = useState("")
+    const [message, setMessage] = useState('')
+
+    const handleErrors = (err) => {
+        setMessage({ msg: err.error, type: 'danger' })
+    }
 
     const handleTitle = (val) => {
         setTitle(val)
@@ -53,14 +58,17 @@ function NewSurvey(props) {
                         }
                         API.addAnswer(answer).then((status) => {
                             console.log(status)
-                        })
+                        }).catch(e => handleErrors(e))
                     })
-                })
+                }).catch(e => handleErrors(e))
             })
-        })
+        }).catch(e => handleErrors(e))
     }
 
     return <Row className="d-flex flex-column mx-auto" style={{ width: "60%" }}>
+        <Toast show={message !== ''} onClose={() => setMessage('')} delay={3000} autohide>
+            <Toast.Body>{message?.msg}</Toast.Body>
+        </Toast>
         <TitleAdmin title={title} handleTitle={handleTitle} description={description} handleDescription={handleDescription} />
         <ListGroup>
             {questions.map((q) => <QuestionCardAdmin questions={questions} setQuestions={setQuestions} question={q} />)}
@@ -111,4 +119,4 @@ function Controls(props) {
     </Col>
 }
 
-export default NewSurvey;
+export default NewSurvey

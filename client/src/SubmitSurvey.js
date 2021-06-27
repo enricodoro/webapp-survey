@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
-import { ListGroup, Col, Button, Form, Card } from 'react-bootstrap';
-import { QuestionCard } from './QuestionCard.js'
+import { ListGroup, Col, Button, Form, Card, Toast } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
-import API from './API';
+import { useState, useEffect } from 'react'
+import { QuestionCard } from './QuestionCard.js'
+import API from './API'
 
 function SubmitSurvey(props) {
     const [questions, setQuestions] = useState([])
@@ -11,8 +11,11 @@ function SubmitSurvey(props) {
     const [required, setRequired] = useState(0)
     const [count, setCount] = useState(0)
     const [enable, setEnable] = useState(true)
+    const [message, setMessage] = useState('')
 
-    // givenAnswer = {qID: n, aID: n, text: string}
+    const handleErrors = (err) => {
+        setMessage({ msg: err.error, type: 'danger' })
+    }
 
     const handleName = (e) => {
         setUsername(e)
@@ -34,9 +37,9 @@ function SubmitSurvey(props) {
                 }
                 API.addUserAnswer(answer).then((status) => {
                     console.log(status)
-                })
+                }).catch(e => handleErrors(e))
             })
-        })
+        }).catch(e => handleErrors(e))
     }
 
     useEffect(() => {
@@ -53,7 +56,7 @@ function SubmitSurvey(props) {
         API.loadQuestions(props.surveyId).then(dbQuestions => {
             setQuestions(dbQuestions)
             setCount(dbQuestions.filter((q) => q.min >= 1).length)
-        })
+        }).catch(e => handleErrors(e))
     }, [props.surveyId])
 
     return <Col className="d-flex flex-column mx-auto mt-3" style={{ width: "60%" }}>
@@ -68,6 +71,9 @@ function SubmitSurvey(props) {
                 </Form>
             </Card.Body>
         </Card>
+        <Toast show={message !== ''} onClose={() => setMessage('')} delay={3000} autohide>
+            <Toast.Body>{message?.msg}</Toast.Body>
+        </Toast>
         <ListGroup>
             {questions.map((q, i) => <QuestionCard setRequired={setRequired} question={q} surveyId={props.surveyId} key={i} givenAnswers={givenAnswers} setGivenAnswers={setGivenAnswers} />)}
         </ListGroup>
@@ -79,4 +85,4 @@ function SubmitSurvey(props) {
     </Col>
 }
 
-export default SubmitSurvey;
+export default SubmitSurvey

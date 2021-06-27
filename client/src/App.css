@@ -82,6 +82,8 @@
   border-left-width: 5px;
 }
 
+/* SURVEY CARD */
+
 #survey-card{
   width: 100%;
   height: fit-content;
@@ -89,6 +91,8 @@
   border-top-width: 5px;
   margin-top: 20px;
 }
+
+/* USERNAME FIELD CARD */
 
 #username-card{
   width: 100%;
@@ -99,13 +103,13 @@
   border-left-width: 5px;
 }
 
-#item-list{
-  border-width: 0px;
-}
+/* UP BUTTON */
 
 #up{
   margin-right: 10px;
 }
+
+/* SURVEY TITLE */
 
 #title{
   margin-bottom: 10px;
@@ -115,10 +119,14 @@
   margin-bottom: 10px;
 }
 
+/* MANDATORY  */
+
 .mandatory::after{
   content: " *";
   color: crimson;
 }
+
+/* SURVEY ITEM LIST */
 
 #survey-item{
   border: crimson;
@@ -136,18 +144,26 @@
   background-color: white;
 }
 
+/* LEFT BUTTON */
+
 #left{
   max-width: fit-content;
 }
+
+/* RIGHT BUTTON */
 
 #right{
   max-width: fit-content;
 }
 
+/* APPEND INPUT GROUP */
+
 #append{
   background-color: whitesmoke;
   color: grey;
 }
+
+/* CUSTOM CHECKBOX */
 
 .custom-checkbox .custom-control-input:checked ~ .custom-control-label::before{
   background-color: crimson !important;
@@ -165,6 +181,8 @@
   border-color: rgb(173, 18, 49) !important;
 }
 
+/* CUSTOM RADIO */
+
 .custom-radio .custom-control-input:checked ~ .custom-control-label::before{
   background-color: crimson !important;
   border-color: rgb(173, 18, 49) !important;
@@ -181,6 +199,8 @@
   border-color: rgb(173, 18, 49) !important;
 }
 
+/* CUSTOM SWITCH */
+
 .custom-switch .custom-control-input:checked ~ .custom-control-label::before{
   background-color: crimson !important;
   border-color: rgb(173, 18, 49) !important;
@@ -195,4 +215,8 @@
 .custom-switch .custom-control-input:active ~ .custom-control-label::before {
   background-color: rgb(173, 18, 49) !important;
   border-color: rgb(173, 18, 49) !important;
+}
+
+.toast{
+  width: fit-content;
 }

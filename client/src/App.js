@@ -1,26 +1,31 @@
-import './App.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import './App.css'
+import 'bootstrap/dist/css/bootstrap.min.css'
 
 import { useEffect, useState } from 'react'
-import { Container, Row } from 'react-bootstrap'
+import { Container, Row, Toast } from 'react-bootstrap'
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
 import TitleBar from './TitleBar.js'
 import SurveyCard from './SurveyCard.js'
 import NewSurvey from './NewSurvey.js'
 import SubmitSurvey from './SubmitSurvey.js'
 import Home from './Home.js'
-import API from './API';
+import API from './API'
 
 function App() {
   const [surveys, setSurveys] = useState([])
   const [loggedIn, setLoggedIn] = useState(false)
   const [username, setUsername] = useState('')
   const [adminID, setAdminID] = useState(-1)
+  const [message, setMessage] = useState('')
+
+  const handleErrors = (err) => {
+    setMessage({ msg: err.error, type: 'danger' })
+  }
 
   useEffect(() => {
     API.loadSurveys().then(dbSurveys => {
       setSurveys(dbSurveys)
-    })
+    }).catch(e => handleErrors(e))
   }, [loggedIn])
 
   return (
@@ -43,10 +48,14 @@ function App() {
 
           <Route path="/" exact render={() =>
             <>
-              {!loggedIn ?
+              {!loggedIn ? <>
+                <Toast show={message !== ''} onClose={() => setMessage('')} delay={3000} autohide>
+                  <Toast.Body>{message?.msg}</Toast.Body>
+                </Toast>
                 <Row className="d-flex flex-row mx-auto" style={{ width: "40%" }}>
-                    {surveys.map((s, i) => <SurveyCard key={i} id={s.sID} title={s.title} description={s.description} />)}
+                  {surveys.map((s, i) => <SurveyCard key={i} id={s.sID} title={s.title} description={s.description} />)}
                 </Row>
+              </>
                 : <Redirect to="/home" />}
             </>} />
 
@@ -58,7 +67,7 @@ function App() {
         </Switch>
       </Container>
     </Router>
-  );
+  )
 }
 
-export default App;
+export default App

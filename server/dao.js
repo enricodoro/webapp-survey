@@ -12,9 +12,9 @@ exports.getAdmin = (username, password) => {
         const sql = 'SELECT * FROM ADMINS WHERE username=?'
         db.get(sql, [username], (err, row) => {
             if (err)
-                reject(err); //db error
+                reject(err) //db error
             else if (row === undefined)
-                resolve(false); //user not found
+                resolve(false) //user not found
             else {
                 bcrypt.compare(password, row.hash).then(result => {  //compare hash computed with the one stored
                     if (result)  // password hash matches
@@ -23,26 +23,26 @@ exports.getAdmin = (username, password) => {
                         resolve(false)
                 })
             }
-        });
-    });
+        })
+    })
 }
 
 exports.getAdminById = (id) => {
     return new Promise((resolve, reject) => {
-        const sql = 'SELECT * FROM ADMINS WHERE id = ?';
+        const sql = 'SELECT * FROM ADMINS WHERE id = ?'
         db.get(sql, [id], (err, row) => {
             if (err)
-                reject(err);
+                reject(err)
             else if (row === undefined)
-                resolve({ error: 'Admin not found.' });
+                resolve({ error: 'Admin not found.' })
             else {
                 // by default, the local strategy looks for "username": not to create confusion in server.js, we can create an object with that property
                 const user = { id: row.id, username: row.username }
-                resolve(user);
+                resolve(user)
             }
-        });
-    });
-};
+        })
+    })
+}
 
 exports.loadSurveys = () => {
     return new Promise((resolve, reject) => {
@@ -63,7 +63,7 @@ exports.loadAdminSurveys = (admin) => {
         db.all(sql, [admin], (err, rows) => {
             if (err) {
                 reject(err)
-                return;
+                return
             }
             resolve(rows)
         })
@@ -76,7 +76,7 @@ exports.loadSurvey = (id) => {
         db.get(sql, [id], (err, row) => {
             if (err) {
                 reject(err)
-                return;
+                return
             }
             resolve(row)
         })
@@ -89,7 +89,7 @@ exports.loadQuestions = (id) => {
         db.all(sql, [id], (err, rows) => {
             if (err) {
                 reject(err)
-                return;
+                return
             }
             resolve(rows)
         })
@@ -102,7 +102,7 @@ exports.loadOfferedAnswers = (sID, qID) => {
         db.all(sql, [qID, sID], (err, rows) => {
             if (err) {
                 reject(err)
-                return;
+                return
             }
             resolve(rows)
         })
@@ -115,7 +115,7 @@ exports.loadAnswers = (id) => {
         db.all(sql, [id], (err, rows) => {
             if (err) {
                 reject(err)
-                return;
+                return
             }
             resolve(rows)
         })
@@ -128,7 +128,7 @@ exports.loadUsers = (id) => {
         db.all(sql, [id], (err, rows) => {
             if (err) {
                 reject(err)
-                return;
+                return
             }
             resolve(rows)
         })

@@ -1,8 +1,7 @@
-'use strict';
+'use strict'
 
 const express = require('express')
 const morgan = require('morgan')
-const { check, validationResult } = require('express-validator')
 const dao = require('./dao')
 const passport = require('passport')
 const passportLocal = require('passport-local')
@@ -180,7 +179,7 @@ app.get('/api/surveys/:id', async (req, res) => {
 // get questions of survey
 
 app.get('/api/questions/:id', async (req, res) => {
-  const id = req.params.id;
+  const id = req.params.id
   try {
     let questions = await dao.loadQuestions(id)
     res.status(200).json(questions)
@@ -229,4 +228,4 @@ app.get('/api/users/:id', async (req, res) => {
 // activate the server
 app.listen(PORT, () => {
   console.log(`Server listening at http://localhost:${PORT}`)
-});
+})

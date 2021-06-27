@@ -1,11 +1,11 @@
-import { Modal, Button, Form, Col, Row, InputGroup, Alert, Tooltip } from 'react-bootstrap'
+import { Modal, Button, Form, Col, Row, InputGroup, Alert } from 'react-bootstrap'
 import { useState, useEffect } from 'react'
-import { AiOutlineDelete } from "react-icons/ai";
+import { AiOutlineDelete } from "react-icons/ai"
 
 function OpenedQuestionModal(props) {
     const [title, setTitle] = useState("")
     const [optional, setOptional] = useState(false)
-    const [validated, setValidated] = useState(false);
+    const [validated, setValidated] = useState(false)
 
     const handleTitle = (val) => {
         setTitle(val)
@@ -23,13 +23,13 @@ function OpenedQuestionModal(props) {
     }
 
     const handleSave = (event) => {
-        const form = event.currentTarget;
+        const form = event.currentTarget
         if (form.checkValidity() === false) {
-            event.preventDefault();
-            event.stopPropagation();
+            event.preventDefault()
+            event.stopPropagation()
         }
 
-        setValidated(true);
+        setValidated(true)
 
         let valid = true
 
@@ -86,7 +86,7 @@ function ClosedQuestionModal(props) {
     const [title, setTitle] = useState("")
     const [min, setMin] = useState(0)
     const [max, setMax] = useState(1)
-    const [validated, setValidated] = useState(false);
+    const [validated, setValidated] = useState(false)
 
     const handleTitle = (val) => {
         setTitle(val)
@@ -223,7 +223,7 @@ function NewAnswer(props) {
 
 function LoginModal(props) {
 
-    const [errorMessage, setErrorMessage] = useState('');
+    const [errorMessage, setErrorMessage] = useState('')
     const [validated, setValidated] = useState(false)
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
@@ -244,19 +244,19 @@ function LoginModal(props) {
     }, [props.loggedIn])
 
     const handleSubmit = (event) => {
-        const form = event.currentTarget;
+        const form = event.currentTarget
         if (form.checkValidity() === false) {
-            event.preventDefault();
-            event.stopPropagation();
+            event.preventDefault()
+            event.stopPropagation()
         }
 
-        event.preventDefault();
-        setErrorMessage('');
-        const credentials = { username, password };
+        event.preventDefault()
+        setErrorMessage('')
+        const credentials = { username, password }
 
-        let valid = true;
+        let valid = true
         if (username === '' || password === '')
-            valid = false;
+            valid = false
 
         if (valid) {
             props.login(credentials)
@@ -274,8 +274,8 @@ function LoginModal(props) {
             }
         }
 
-        setValidated(true);
-    };
+        setValidated(true)
+    }
 
     return <Modal
         aria-labelledby="contained-modal-title-vcenter"
