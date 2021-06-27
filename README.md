@@ -89,7 +89,7 @@
     {
       "sID": 1,
       "qID": 1,
-      "title": "How much time do you spend in a day while playing videogames?",
+      "title": "How much time do you spend in a day playing videogames?",
       "open": 0,
       "min": 1,
       "max": 1
